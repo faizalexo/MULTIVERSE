@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class WorldmonitorConfig(AppConfig):
-    name = 'worldmonitor'
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'apps.worldmonitor'

@@ -1,0 +1,17 @@
+{% extends 'ecommerce/base.html' %}
+
+{% block content %}
+
+<h2>Welcome to Store</h2>
+
+{% for product in products %}
+<div>
+    <h3>{{ product.name }}</h3>
+    <p>Price: {{ product.price }}</p>
+
+    <a href="/shop/add/{{ product.id }}/">Add to Cart</a>
+</div>
+<hr>
+{% endfor %}
+
+{% endblock %}

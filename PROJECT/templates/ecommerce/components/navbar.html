@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Navbar</title>
+<style>
+    /* LOGIN BUTTON (PREMIUM STYLE) */
+    .btn {
+        position: relative;
+        padding: 8px 20px;
+        border-radius: 999px;
+
+        background: linear-gradient(135deg, #38bdf8, #6366f1);
+        color: white;
+        text-decoration: none;
+
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    /* HOVER EFFECT */
+    .btn:hover {
+        transform: translateY(-2px) scale(1.03);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+    }
+
+    /* CLICK EFFECT */
+    .btn:active {
+        transform: scale(0.96);
+    }
+
+    /* GLOW BORDER EFFECT */
+    .btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        padding: 1px;
+        background: linear-gradient(135deg, #38bdf8, #6366f1);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+    }
+
+    /* OPTIONAL: subtle shine animation */
+    .btn::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -75%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transform: skewX(-20deg);
+    }
+
+    .btn:hover::after {
+        left: 130%;
+        transition: 0.6s;
+    }
+
+    /* USER MENU DROPDOWN */
+    .user-menu {
+        position: relative;
+    }
+
+    /* USER BUTTON (matches your theme) */
+    .user-btn {
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #e2e8f0;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .user-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+    }
+
+    /* DROPDOWN BOX */
+    .dropdown {
+        position: absolute;
+        right: 0;
+        top: 45px;
+        width: 170px;
+
+        background: rgba(15, 23, 42, 0.95);
+        backdrop-filter: blur(10px);
+
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+
+        display: none;
+        overflow: hidden;
+    }
+
+    /* DROPDOWN ITEMS */
+    .dropdown a {
+        display: block;
+        padding: 12px 15px;
+        text-decoration: none;
+        color: #cbd5f5;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    /* HOVER EFFECT */
+    .dropdown a:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+    }
+
+    /* SHOW CLASS (for JS toggle) */
+    .dropdown.show {
+        display: block;
+    }
+
+    /* RESET */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* BODY BACKGROUND (important for premium look) */
+    body {
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: #fff;
+    }
+
+    /* NAVBAR */
+    .navbar {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        backdrop-filter: blur(12px);
+        background: rgba(15, 23, 42, 0.7);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 1000;
+    }
+
+    /* CONTAINER */
+    .nav-container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 15px 20px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    /* BRAND */
+    .brand {
+        font-size: 20px;
+        font-weight: 700;
+        background: linear-gradient(90deg, #38bdf8, #6366f1);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* NAV LINKS */
+    .nav-center a {
+        margin: 0 15px;
+        text-decoration: none;
+        color: #cbd5f5;
+        font-weight: 500;
+        position: relative;
+        transition: 0.3s;
+    }
+
+    /* HOVER UNDERLINE EFFECT */
+    .nav-center a::after {
+        content: "";
+        position: absolute;
+        width: 0%;
+        height: 2px;
+        bottom: -5px;
+        left: 0;
+        background: #38bdf8;
+        transition: 0.3s;
+    }
+
+    .nav-center a:hover::after {
+        width: 100%;
+    }
+
+    .nav-center a:hover {
+        color: #fff;
+    }
+
+    /* RIGHT SIDE */
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* USER TEXT */
+    .user {
+        font-weight: 500;
+        color: #e2e8f0;
+    }
+
+    /* BUTTON */
+    .btn {
+        padding: 8px 18px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #38bdf8, #6366f1);
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+    }
+
+    /* MENU TOGGLE (MOBILE) */
+    .menu-toggle {
+        display: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+
+        .nav-center {
+            position: absolute;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            flex-direction: column;
+            text-align: center;
+            display: none;
+            padding: 20px 0;
+        }
+
+        .nav-center a {
+            display: block;
+            margin: 10px 0;
+        }
+
+        .menu-toggle {
+            display: block;
+        }
+
+        .nav-center.active {
+            display: flex;
+        }
+    }
+</style>
+<script>
+    function toggleDropdown() {
+        document.getElementById("dropdown").classList.toggle("show");
+    }
+
+    window.addEventListener("click", function (e) {
+        if (!e.target.closest(".user-menu")) {
+            const dropdown = document.getElementById("dropdown");
+            if (dropdown) dropdown.classList.remove("show");
+        }
+    });
+    const menuToggle = document.getElementById('menuToggle');
+    const navCenter = document.querySelector('.nav-center');
+
+    menuToggle.addEventListener('click', () => {
+        navCenter.classList.toggle('active');
+    });
+</script>
+<nav class="navbar">
+    <div class="nav-container">
+
+        <!-- LEFT -->
+        <div class="nav-right">
+
+            <span class="brand">KAXONisLIVE</span>
+        </div>
+
+        <!-- CENTER (optional search later) -->
+        <div class="nav-center">
+            <a href="{% url 'home' %}">Home</a>
+
+            <a href="#">Explore</a>
+
+            <a href="{% url 'cart' %}">Cart</a>
+        </div>
+
+        <div class="nav-right">
+            {% if request.user.is_authenticated %}
+            <div class="user-menu">
+                <button class="user-btn" onclick="toggleDropdown()">
+                    👤 {{ request.user.username }} ⬇
+                </button>
+
+                <div id="dropdown" class="dropdown">
+                    <a href="#">Profile</a>
+                    <a href="#">Logout</a>
+                </div>
+            </div>
+            {% else %}
+            <a href="#" class="login-btn">Login</a>
+            {% endif %}
+        </div>
+
+
+
+
+
+        <!-- MOBILE MENU BUTTON -->
+        <div class="menu-toggle" id="menuToggle">
+            ☰
+        </div>
+
+    </div>
+</nav>
