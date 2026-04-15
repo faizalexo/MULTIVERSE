@@ -1,5 +1,6 @@
 from django.urls import path
+from .views import course_views
 
 urlpatterns = [
-    # add later
+    path('', course_views.course_list, name='lms_home'),
 ]
