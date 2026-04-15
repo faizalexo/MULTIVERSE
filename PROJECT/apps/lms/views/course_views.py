@@ -8,3 +8,13 @@ def course_list(request):
 def course_detail(request, id):
     course = get_object_or_404(Course, id=id)
     return render(request, 'lms/course_detail.html', {'course': course})
+
+# Add Course
+def add_course(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        description = request.POST['description']
+        price = request.POST['price']
+        Course.objects.create(title=title, description=description, price=price)
+        return redirect('course_list')
+    return render(request, 'lms/add_course.html')
