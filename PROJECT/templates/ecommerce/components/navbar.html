@@ -2,20 +2,18 @@
 <html lang="en">
 <title>Navbar</title>
 <style>
-  /* ================= GLOBAL ================= */
+/* ================= GLOBAL ================= */
 :root {
-    --bg-main: #020617;
-    --bg-glass: rgba(15, 23, 42, 0.7);
-    --border: rgba(255, 255, 255, 0.08);
+    --bg-main: #ffffff;
+    --bg-soft: #f7f7f7;
+    --bg-glass: rgba(255, 255, 255, 0.7);
 
-    --text-main: #e2e8f0;
-    --text-muted: #94a3b8;
+    --border: #e5e5e5;
 
-    --accent: #6366f1;
-    --accent-2: #a855f7;
-    --danger: #ef4444;
+    --text-main: #111111;
+    --text-muted: #777777;
 
-    --radius: 16px;
+    --radius: 14px;
 }
 
 /* RESET */
@@ -26,10 +24,10 @@
     font-family: 'Inter', sans-serif;
 }
 
-/* BODY */
 body {
-    background: radial-gradient(circle at top, #0f172a, #020617);
+    background: var(--bg-main);
     color: var(--text-main);
+    -webkit-font-smoothing: antialiased;
 }
 
 /* ================= NAVBAR ================= */
@@ -37,7 +35,7 @@ body {
     position: sticky;
     top: 0;
     width: 100%;
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(10px);
     background: var(--bg-glass);
     border-bottom: 1px solid var(--border);
     z-index: 1000;
@@ -46,141 +44,220 @@ body {
 .nav-container {
     max-width: 1300px;
     margin: auto;
-    padding: 16px 25px;
+    padding: 18px 40px;
+
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+}
+
+/* LEFT */
+.nav-left {
     display: flex;
-    justify-content: space-between;
     align-items: center;
 }
 
 /* BRAND */
 .brand {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    background: linear-gradient(90deg, #38bdf8, #6366f1, #a855f7);
-    -webkit-background-clip: text;
-    background-clip: text; /* 🔥 FIX */
-    -webkit-text-fill-color: transparent;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 2px;
 }
 
 /* CENTER */
 .nav-center {
     display: flex;
-    gap: 25px;
+    gap: 30px;
     align-items: center;
+    justify-content: center;
 }
 
 .nav-center a {
     color: var(--text-muted);
     text-decoration: none;
     font-weight: 500;
-    transition: 0.3s;
+    transition: 0.25s ease;
 }
 
 .nav-center a:hover {
-    color: white;
+    color: var(--text-main);
 }
 
 /* SEARCH */
 .search-box input {
-    padding: 10px 16px;
+    padding: 10px 18px;
     border-radius: 999px;
     border: 1px solid var(--border);
-    background: rgba(255, 255, 255, 0.05);
-    color: white;
+    background: #fff;
+    color: var(--text-main);
     outline: none;
+    transition: 0.25s ease;
 }
 
 .search-box input:focus {
-    border: 1px solid var(--accent);
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    border-color: #bbb;
 }
 
-/* ================= BUTTONS ================= */
+/* RIGHT */
+.nav-right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+}
+
+/* ================= BUTTON ================= */
 .btn {
-    padding: 8px 18px;
+    padding: 8px 20px;
     border-radius: 999px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: white;
-    font-weight: 600;
+    background: #111;
+    color: #fff;
+    font-weight: 500;
     text-decoration: none;
-    transition: 0.3s;
+    transition: 0.25s ease;
 }
 
 .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
+    background: #333;
+    transform: translateY(-1px);
 }
 
-/* USER BTN */
+/* USER */
+.user-menu {
+    position: relative;
+}
+
 .user-btn {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    padding: 8px 14px;
+    padding: 8px 16px;
     border-radius: 999px;
-    color: var(--text-muted);
+    border: 1px solid var(--border);
+    background: #fff;
+    color: #111;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.25s ease;
 }
 
 .user-btn:hover {
-    color: white;
+    border-color: #bbb;
 }
 
-/* ================= DROPDOWN ================= */
+/* DROPDOWN */
 .dropdown {
     position: absolute;
-    top: 50px;
+    top: 60px;
     right: 0;
-    width: 180px;
-    background: rgba(2, 6, 23, 0.95);
-    backdrop-filter: blur(20px);
+    width: 190px;
+
+    background: #fff;
     border-radius: 12px;
     border: 1px solid var(--border);
-    display: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+
+    transition: 0.25s ease;
 }
 
 .dropdown.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.dropdown a {
     display: block;
+    padding: 10px 14px;
+    text-decoration: none;
+    color: #111;
+    font-size: 14px;
+}
+
+.dropdown a:hover {
+    background: #f5f5f5;
 }
 
 /* ================= CART ================= */
 .cart-btn {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #111;
+    color: #fff;
+
+    border-radius: 50%;
+    cursor: pointer;
     position: relative;
+
+    transition: 0.25s ease;
 }
 
+.cart-btn:hover {
+    background: #333;
+}
+
+/* BADGE */
 .cart-badge {
     position: absolute;
-    top: -5px;
-    right: -8px;
-    background: var(--danger);
+    top: -4px;
+    right: -4px;
+
+    background: #111;
+    color: #fff;
+
     font-size: 10px;
+    font-weight: 600;
+
     padding: 3px 6px;
     border-radius: 50%;
+    min-width: 18px;
+    text-align: center;
 }
 
-/* POPUP */
+/* CART POPUP */
 .cart-popup {
-    position: absolute;
-    top: 65px;
-    right: 0;
-    display: none;
+    position: fixed; /* 🔥 change from absolute */
+
+    top: 80px;
+    right: 40px;
+
+    width: 340px;
+
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+
+    padding: 15px;
+
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    pointer-events: none;
+
+    transition: all 0.25s ease;
 }
 
 .cart-popup.active {
-    display: block;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
 }
-/* ================= CARD ================= */
+/* ================= CART CARD ================= */
 .card {
-    width: 400px;
-    background: rgba(255,255,255,0.03);
-    backdrop-filter: blur(20px);
+    width: 100%;
+    background: #fff;
     border-radius: var(--radius);
     border: 1px solid var(--border);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    transition: 0.3s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
 /* TITLE */
@@ -188,22 +265,21 @@ body {
     padding: 12px 20px;
     border-bottom: 1px solid var(--border);
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--text-muted);
 }
 
-/* PRODUCT */
+/* PRODUCT ROW */
 .product {
     display: grid;
-    grid-template-columns: 60px 1fr 80px 1fr;
+    grid-template-columns: 60px 1fr 80px;
     gap: 10px;
     padding: 12px;
 }
 
 /* QUANTITY */
 .quantity {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    display: flex;
     border: 1px solid var(--border);
     border-radius: 8px;
     overflow: hidden;
@@ -212,28 +288,31 @@ body {
 .quantity button {
     background: transparent;
     border: none;
-    color: white;
+    padding: 6px 10px;
     cursor: pointer;
 }
 
 .quantity button:hover {
-    background: rgba(255,255,255,0.05);
+    background: #f5f5f5;
 }
 
-/* ================= CHECKOUT ================= */
+/* CHECKOUT */
 .checkout-btn {
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    border: none;
-    border-radius: 10px;
+    width: 100%;
+    margin-top: 10px;
     padding: 12px;
-    color: white;
+    border-radius: 999px;
+    border: none;
+
+    background: #111;
+    color: #fff;
+
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.25s ease;
 }
 
 .checkout-btn:hover {
-    box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
-    transform: scale(1.03);
+    background: #333;
 }
 </style>
 <script>
@@ -256,24 +335,30 @@ body {
     }
 </script>
 <script>
-    function toggleDropdown() {
-        document.getElementById("dropdown").classList.toggle("show");
+   function toggleDropdown() {
+    const dropdown = document.getElementById("dropdown");
+    dropdown.classList.toggle("show");
+}
+
+
+
+
+/* CLOSE when clicking outside */
+window.addEventListener("click", function(e) {
+    const dropdown = document.getElementById("dropdown");
+    const userBtn = document.querySelector(".user-btn");
+
+    if (!userBtn.contains(e.target)) {
+        dropdown.classList.remove("show");
     }
 
-    window.addEventListener("click", function (e) {
-        if (!e.target.closest(".user-menu")) {
-            const dropdown = document.getElementById("dropdown");
-            if (dropdown) dropdown.classList.remove("show");
-        }
-    });
-    const menuToggle = document.querySelector('.menu-toggle');
-const navCenter = document.querySelector('.nav-center');
+    const cart = document.querySelector(".cart-popup");
+    const cartBtn = document.querySelector(".cart-btn");
 
-if (menuToggle && navCenter) {
-    menuToggle.addEventListener('click', () => {
-        navCenter.classList.toggle('active');
-    });
-}
+    if (!cartBtn.contains(e.target) && !cart.contains(e.target)) {
+        cart.classList.remove("active");
+    }
+});
 </script>
 <nav class="navbar">
     <div class="nav-container">
@@ -297,35 +382,32 @@ if (menuToggle && navCenter) {
         </div>
 
         <!-- RIGHT -->
-        <div class="nav-right">
+       <div class="nav-right">
 
-            {% if request.user.is_authenticated %}
-            <div class="user-menu">
-                <button class="user-btn" onclick="toggleDropdown()">
-                    👤 {{ request.user.username }}
-                </button>
+    {% if request.user.is_authenticated %}
+    <div class="user-menu">
+        <button class="user-btn" onclick="toggleDropdown()">
+            👤 {{ request.user.username }}
+        </button>
 
-                <div id="dropdown" class="dropdown">
-                    <a href="#">Profile</a>
-                    <a href="#">Orders</a>
-                    <a href="{% url 'logout' %}">Logout</a>
-                </div>
-            </div>
-            {% else %}
-            <a href="{% url 'login' %}" class="btn">Login</a>
-            {% endif %}
-
-            <!-- 🛒 CART -->
-            <button class="btn cart-btn" onclick="toggleCart()">
-
-                🛒 
-            </button>
-
+        <div id="dropdown" class="dropdown">
+            <a href="#">Profile</a>
+            <a href="#">Orders</a>
+            <a href="{% url 'logout' %}">Logout</a>
         </div>
+    </div>
+    {% else %}
+    <a href="{% url 'login' %}" class="btn">Login</a>
+    {% endif %}
 
+    <div class="cart-wrapper">
+        <button class="cart-btn" onclick="toggleCart()">🛒</button>
+
+        <!-- ✅ POPUP INSIDE -->
+        <div id="cartPopup" class="cart-popup"></div>
+    </div>
+
+</div>
     </div>
 </nav>
 
-<!-- POPUP -->
-<div id="cartPopup" class="cart-popup"></div>
-</nav>
