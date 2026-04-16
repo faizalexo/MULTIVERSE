@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout
 from django.http import JsonResponse
 from django.core.cache import cache
 
+
 # 🔥 HOME / INDEX
 
 def index(request):
