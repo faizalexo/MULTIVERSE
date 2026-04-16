@@ -100,13 +100,11 @@ def cyberattacks(request):
         {"country": "Germany", "type": "Malware", "severity": "Low"},
         
     ]
-    return render(request, 'worldmonitor/cyberattacks', {'attacks': attacks})
-
+    return render(request, 'worldmonitor/cyberattacks.html', {'attacks': attacks})
 
 
 def geopolitics(request):
-    return render(request, 'worldmonitor/geopolitics')
-        
+    return render(request, 'worldmonitor/geopolitics.html')         
         
         
         

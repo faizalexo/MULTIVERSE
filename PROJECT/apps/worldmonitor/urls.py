@@ -1,13 +1,16 @@
 from django.contrib import admin
-from django.urls import path, include
-from apps.worldmonitor import views
-
-
+from django.urls import path
+from apps.worldmonitor.views import index, cyberattacks, geopolitics, country_news
 
 urlpatterns = [
-    path('', views.index, name='home'),
-    path('cyberattacks/', views.cyberattacks),
-    path('geopolitics/', views.geopolitics),
-    path('country/<str:country>/', views.country_news),
+    path('', index, name='home'),
+    path('world/', index),
+    
+
+    path('cyberattacks/', cyberattacks),
+    path('geopolitics/', geopolitics),
+
+    path('country/<str:country>/', country_news),
 ]
+
 
