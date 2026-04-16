@@ -3,6 +3,7 @@ from django.urls import path, include
 from apps.lms.views.dashboard_views import dashboard
 from django.conf import settings
 from django.conf.urls.static import static
+from apps.worldmonitor import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -17,6 +18,9 @@ urlpatterns = [
     path('shop/', include('apps.ecommerce.urls')),
     path('learn/', include('apps.lms.urls')),
     path('world/', include('apps.worldmonitor.urls')),
+    
+    
+    
 ]
 
 

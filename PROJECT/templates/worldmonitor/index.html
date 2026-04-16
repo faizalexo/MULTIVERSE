@@ -1,0 +1,439 @@
+{% extends 'worldmonitor/base.html' %}
+
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<style>
+
+/* 🌌 BACKGROUND */
+body {
+    background: linear-gradient(135deg, #95a9d7, #6874a9);
+    color: white;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* GLASS EFFECT */
+.glass {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* GLOW */
+.glow:hover {
+    box-shadow: 0 0 25px red;
+    transform: translateY(-5px);
+}
+
+
+.dashboard {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 25px;
+    align-items: start;   /* 🔥 FIX */
+}
+
+
+#newsBox {
+    max-height: 300px;
+    overflow-y: auto;
+}
+    
+
+/* 🔥 MAIN AREA */
+.main-content {
+    background: #000000;
+    padding: 30px;
+
+    
+    margin-left: 50px;
+   
+
+}
+
+/* 🔥 GRID LAYOUT */
+.dashboard {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 25px;
+}
+
+/* 🔥 MAP BOX */
+.map-container {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 15px;
+}
+
+/* 🔥 MAP SIZE */
+#map {
+    height: 500px;
+    width: 100%;
+    border-radius: 12px;
+}
+
+/* 🔥 SIDE CARDS */
+.card-box {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: 0.3s;
+     max-height: 350px;
+    overflow-y: auto;
+}
+
+
+
+/* 🔥 HOVER EFFECT */
+.card-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px red;
+}
+
+/* 🔥 TEXT */
+.card-title {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.card-value {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+
+
+
+/* 🔥 MAIN */
+
+
+/* 🔥 CAROUSEL */
+.carousel-item img {
+    height: 550px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* 🔥 CAPTION */
+.carousel-caption {
+    background: rgba(0,0,0,0.6);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+/* 🔥 CARD */
+.news-card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.3s;
+    color: white;
+}
+
+/* 🔥 CARD HOVER */
+.news-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 20px red;
+}
+
+/* 🔥 CARD IMAGE */
+.news-card img {
+    height: 200px;
+    object-fit: cover;
+}
+
+
+
+
+
+
+/* 🔥 CENTER CARD SECTION */
+.cards-center {
+    display: flex;
+    justify-content: center;   /* center align */
+    align-items: center;
+    gap: 20px;
+    margin-top: 40px;
+    flex-wrap: wrap;           /* responsive */
+}
+
+/* 🔥 CARD SIZE FIX */
+.cards-center .card {
+    width: 280px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.05);
+    color: white;
+    transition: 0.3s;
+}
+
+/* 🔥 HOVER */
+.cards-center .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 20px red;
+}
+
+
+
+.row {
+    justify-content: center;
+}
+
+
+
+.news-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 0 30px red;
+}
+
+</style>
+
+
+<div class="main-content">
+
+    <div class="dashboard">
+
+    <!-- LEFT MAP -->
+    <div class="map-container glass glow">
+    <h5>🌍 Live Conflict Map</h5>
+    <div id="map"></div>
+</div>
+
+    <!-- RIGHT CARDS -->
+    <div>
+
+        <div class="card-box">
+            <div class="card-title">🔥 Active Conflicts</div>
+            <div class="card-value text-danger">
+    {{ conflicts|length }}
+</div>
+
+<div class="mt-3">
+    {% for c in conflicts %}
+        <div style="border-bottom:1px solid #333; padding:8px 0;">
+            <strong>🌍 {{ c.country }}</strong><br>
+            <small style="color:#aaa;">{{ c.reason }}</small>
+        </div>
+    {% endfor %}
+</div>
+        </div>
+
+        <div class="card-box">
+            <div class="card-title">⚠ Risk Level</div>
+            <div class="card-value text-warning" id="riskLevel">HIGH</div>
+        </div>
+
+        <!-- 🔥 COUNTRY NEWS -->
+        <div class="card-box">
+            <h5 id="countryName"> Select Country</h5>
+            <div id="newsBox"></div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<div id="newsCarousel" class="carousel slide"
+     data-bs-ride="carousel"
+     data-bs-interval="3000">
+
+    <div class="carousel-inner">
+
+        {% for article in articles|slice:":3" %}
+        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+
+            <img src="{{ article.urlToImage|default:'https://source.unsplash.com/1200x400/?war' }}" class="d-block w-100">
+
+            <div class="carousel-caption">
+                <h5>{{ article.title }}</h5>
+                <p>{{ article.description }}</p>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+
+
+
+<div class="row mt-5">
+
+    {% for article in articles|slice:"3:" %}
+    <div class="col-md-4 mb-4">
+
+        <div class="card news-card h-100">
+
+            <img src="{{ article.urlToImage|default:'https://source.unsplash.com/400x300/?cyber' }}" class="card-img-top">
+
+            <div class="card-body">
+                <h6>{{ article.title|truncatechars:80 }}</h6>
+                <p>{{ article.description|truncatechars:100 }}</p>
+
+                <a href="{{ article.url }}" target="_blank" class="btn btn-info btn-sm">
+                    Read More
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 🌍 MAP SCRIPT -->
+<script>
+
+// ✅ SINGLE MAP INIT (FINAL)
+var map = L.map('map', {
+    minZoom: 3,
+    maxZoom: 8,
+    maxBounds: [
+        [-60, -180],
+        [85, 180]
+    ],
+    maxBoundsViscosity: 1.0
+}).setView([20, 0], 3);
+
+
+// 🌍 TILE
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+
+
+// 🔥 WAR COUNTRIES
+const warCountries = [
+    "Ukraine",
+    "Israel",
+    "Sudan",
+    "Myanmar",
+    "Yemen",
+    "Ethiopia",
+    "Pakistan",
+    "Syrian Arab Republic",
+    "Democratic Republic of the Congo"
+];
+
+// 🌍 LOAD MAP
+fetch("https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json")
+.then(res => res.json())
+.then(data => {
+
+    var geoLayer = L.geoJSON(data, {
+
+        style: function(feature) {
+
+            let country = feature.properties.name;
+
+            if (warCountries.includes(country)) {
+                return { fillColor: "red", fillOpacity: 0.7, color:"#333", weight:1 };
+            } else {
+                return { fillColor: "green", fillOpacity: 0.3, color:"#333", weight:1 };
+            }
+        },
+
+        onEachFeature: function (feature, layer) {
+
+            layer.on('click', function () {
+
+                let country = feature.properties.name;
+
+                // 🌍 NAME UPDATE
+                document.getElementById("countryName").innerText = "🌍 " + country;
+
+                // 🔥 RISK UPDATE
+                let risk = document.getElementById("riskLevel");
+
+                if (warCountries.includes(country)) {
+                    risk.innerText = "HIGH";
+                    risk.style.color = "red";
+                } else {
+                    risk.innerText = "LOW";
+                    risk.style.color = "green";
+                }
+
+                // 📰 NEWS FETCH
+                fetch(`/country-news/${country}/`)
+                .then(res => res.json())
+                .then(data => {
+
+                    let newsBox = document.getElementById("newsBox");
+                    newsBox.innerHTML = "";
+
+                    data.articles.forEach(article => {
+                        newsBox.innerHTML += `
+                            <div class="card-box">
+                                <h6>${article.title}</h6>
+                                <p>${article.description || ""}</p>
+                            </div>
+                        `;
+                    });
+
+                });
+
+                // 🎯 highlight
+                geoLayer.resetStyle();
+                layer.setStyle({
+                    fillColor: "yellow",
+                    fillOpacity: 0.9
+                });
+
+            });
+
+        }
+
+    }).addTo(map);
+
+});
+
+
+// 📍 MARKERS
+L.marker([48.3, 31.1]).addTo(map).bindPopup("Ukraine War 🔴");
+L.marker([31.5, 34.8]).addTo(map).bindPopup("Israel Conflict ⚠");
+L.marker([28.6, 77.2]).addTo(map).bindPopup("India Security 🟡");
+
+
+
+
+</script>
+
+
+
+
+
+
+
+{% endblock %}
