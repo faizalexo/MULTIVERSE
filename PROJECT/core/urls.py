@@ -18,6 +18,17 @@ urlpatterns = [
     path('shop/', include('apps.ecommerce.urls')),
     path('learn/', include('apps.lms.urls')),
     path('world/', include('apps.worldmonitor.urls')),
+    path('world/', include('apps.worldmonitor.urls')),
+    
+    
+  
+
+
+    path('admin/', admin.site.urls),
+
+    # 👉 worldmonitor ko root pe laa diya
+    path('', include('apps.worldmonitor.urls')),
+
     
     
     
