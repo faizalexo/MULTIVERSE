@@ -1,10 +1,123 @@
-<h2>Your Cart</h2>
+<div class="master-container">
 
-{% for item in cart_items %}
-<p>
-    {{ item.product.name }} - {{ item.quantity }} × {{ item.product.price }}
-    <a href="/shop/remove/{{ item.id }}/">Remove</a>
-</p>
-{% endfor %}
+    <!-- 🛒 CART -->
+    <div class="card cart">
+        <label class="title">Your cart</label>
 
-<h3>Total: {{ total }}</h3>
+        <div class="products">
+
+            {% for item in cart_items %}
+            <div class="product" id="item-{{ item.id }}">
+
+                <svg fill="none" viewBox="0 0 60 60" height="60" width="60">
+                    <rect fill="#FFF6EE" rx="8.25" height="60" width="60"></rect>
+                </svg>
+
+                <div>
+                    <span>{{ item.product.name }}</span>
+                    <p>₹{{ item.product.price }}</p>
+                </div>
+
+                <!-- 🔥 UPDATED QUANTITY (NO RELOAD) -->
+                <div class="quantity">
+                    <button onclick="updateCart('{{ item.id }}', 'decrease')">-</button>
+
+                    <label id="qty-{{ item.id }}">{{ item.quantity }}</label>
+
+                    <button onclick="updateCart('{{ item.id }}', 'increase')">+</button>
+                </div>
+
+                <!-- 🔥 ITEM TOTAL -->
+                <label class="price small" id="price-{{ item.id }}">
+                    ₹{{ item.product.price|floatformat:2 }}
+                </label>
+
+            </div>
+            {% empty %}
+            <p style="padding:20px;">Cart is empty</p>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <!-- 💰 CHECKOUT -->
+    <div class="card checkout">
+        <label class="title">Checkout</label>
+
+        <div class="details">
+            <span>Total:</span>
+            <span id="cart-total">₹{{ total }}</span>
+        </div>
+
+        <div class="checkout--footer">
+            <label class="price" id="cart-total-footer">₹{{ total }}</label>
+            <button class="checkout-btn" onclick="checkout()">Checkout</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function updateCart(cartId, action) {
+        fetch(`/shop/update/${cartId}/${action}/`)
+            .then(res => res.json())
+            .then(data => {
+
+                // ❌ item delete
+                if (data.deleted) {
+                    document.getElementById(`item-${cartId}`).remove();
+                    updateTotal();
+                    return;
+                }
+
+                // 🔢 quantity update
+                document.getElementById(`qty-${cartId}`).innerText = data.quantity;
+
+                // 💰 item price update
+                document.getElementById(`price-${cartId}`).innerText = "₹" + data.price;
+
+                updateTotal();
+            });
+    }
+
+
+    // 🔥 TOTAL AUTO UPDATE
+    function updateTotal() {
+        let total = 0;
+
+        document.querySelectorAll("[id^='price-']").forEach(el => {
+            total += parseFloat(el.innerText.replace("₹", ""));
+        });
+
+        document.getElementById("cart-total").innerText = "₹" + total;
+        document.getElementById("cart-total-footer").innerText = "₹" + total;
+    }
+</script>
+
+
+<script>
+    function checkout() {
+
+        const btn = document.querySelector(".checkout-btn");
+
+        // 🔄 loading
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
+        setTimeout(() => {
+
+            // 🎉 success popup
+            const popup = document.getElementById("order-success");
+            popup.style.display = "block";
+
+            // reset button
+            btn.innerText = "Checkout";
+            btn.disabled = false;
+
+            // 🧹 cart empty (UI only)
+            document.querySelector(".products").innerHTML =
+                "<p style='padding:20px;'>Cart is empty</p>";
+
+        }, 2000);
+    }
+</script>

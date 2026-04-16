@@ -8,8 +8,8 @@
 <body>
     {% include 'ecommerce/components/navbar.html' %}
 
-
-    <hr>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/ecommerce.css' %}">
 
     {% block content %}
     {% endblock %}

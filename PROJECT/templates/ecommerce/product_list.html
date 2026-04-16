@@ -1,8 +1,37 @@
-<h2>Products</h2>
+{% extends 'ecommerce/base.html' %}
 
-{% for product in products %}
-<p>
-    {{ product.name }} - {{ product.price }}
-    <a href="/shop/add/{{ product.id }}/">Add to Cart</a>
-</p>
-{% endfor %}
+{% block content %}
+
+<div class="product-container">
+
+    {% for product in products %}
+    <div class="product-card">
+
+        <div class="product-img">
+            <img src="{{ product.image.url }}" alt="">
+        </div>
+
+        <div class="product-info">
+            <h3>{{ product.name }}</h3>
+            <p class="price">₹{{ product.price }}</p>
+
+            <button onclick="addToCart({{ product.id }})" class="add-btn">
+                Add to Cart
+            </button>
+        </div>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+<script>
+    function addToCart(productId) {
+        fetch(`/shop/add/${productId}/`)
+            .then(() => {
+                alert("Added to cart 🛒");
+            });
+    }
+</script>
+
+{% endblock %}

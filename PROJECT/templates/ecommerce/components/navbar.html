@@ -2,130 +2,7 @@
 <html lang="en">
 <title>Navbar</title>
 <style>
-    /* LOGIN BUTTON (PREMIUM STYLE) */
-    .btn {
-        position: relative;
-        padding: 8px 20px;
-        border-radius: 999px;
-
-        background: linear-gradient(135deg, #38bdf8, #6366f1);
-        color: white;
-        text-decoration: none;
-
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-
-        transition: all 0.3s ease;
-        overflow: hidden;
-    }
-
-    /* HOVER EFFECT */
-    .btn:hover {
-        transform: translateY(-2px) scale(1.03);
-        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
-    }
-
-    /* CLICK EFFECT */
-    .btn:active {
-        transform: scale(0.96);
-    }
-
-    /* GLOW BORDER EFFECT */
-    .btn::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: 999px;
-        padding: 1px;
-        background: linear-gradient(135deg, #38bdf8, #6366f1);
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-    }
-
-    /* OPTIONAL: subtle shine animation */
-    .btn::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -75%;
-        width: 50%;
-        height: 100%;
-        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-        transform: skewX(-20deg);
-    }
-
-    .btn:hover::after {
-        left: 130%;
-        transition: 0.6s;
-    }
-
-    /* USER MENU DROPDOWN */
-    .user-menu {
-        position: relative;
-    }
-
-    /* USER BUTTON (matches your theme) */
-    .user-btn {
-        padding: 8px 14px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #e2e8f0;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-    .user-btn:hover {
-        background: rgba(255, 255, 255, 0.15);
-        color: #fff;
-    }
-
-    /* DROPDOWN BOX */
-    .dropdown {
-        position: absolute;
-        right: 0;
-        top: 45px;
-        width: 170px;
-
-        background: rgba(15, 23, 42, 0.95);
-        backdrop-filter: blur(10px);
-
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-
-        display: none;
-        overflow: hidden;
-    }
-
-    /* DROPDOWN ITEMS */
-    .dropdown a {
-        display: block;
-        padding: 12px 15px;
-        text-decoration: none;
-        color: #cbd5f5;
-        font-size: 14px;
-        transition: 0.3s;
-    }
-
-    /* HOVER EFFECT */
-    .dropdown a:hover {
-        background: rgba(255, 255, 255, 0.08);
-        color: #fff;
-    }
-
-    /* SHOW CLASS (for JS toggle) */
-    .dropdown.show {
-        display: block;
-    }
-
-    /* RESET */
+    /* 🔥 GLOBAL RESET */
     * {
         margin: 0;
         padding: 0;
@@ -133,55 +10,89 @@
         font-family: 'Segoe UI', sans-serif;
     }
 
-    /* BODY BACKGROUND (important for premium look) */
+    /* 🌌 PREMIUM BACKGROUND */
     body {
-        background: linear-gradient(135deg, #0f172a, #1e293b);
-        color: #fff;
+        background: radial-gradient(circle at top, #0f172a, #020617);
+        color: #e2e8f0;
     }
 
-    /* NAVBAR */
+    /* ================= NAVBAR ================= */
+
     .navbar {
         position: sticky;
         top: 0;
         width: 100%;
-        backdrop-filter: blur(12px);
-        background: rgba(15, 23, 42, 0.7);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        background: rgba(2, 6, 23, 0.7);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         z-index: 1000;
     }
 
-    /* CONTAINER */
     .nav-container {
-        max-width: 1200px;
+        max-width: 1300px;
         margin: auto;
-        padding: 15px 20px;
+        padding: 16px 25px;
 
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
 
-    /* BRAND */
+    /* 💎 BRAND */
     .brand {
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 700;
-        background: linear-gradient(90deg, #38bdf8, #6366f1);
+        letter-spacing: 1px;
+
+        background: linear-gradient(90deg, #38bdf8, #6366f1, #a855f7);
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
-    /* NAV LINKS */
+    /* ================= CENTER ================= */
+
+    .nav-center {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
+
+    /* 🔍 SEARCH */
+    .search-box input {
+        padding: 10px 16px;
+        border-radius: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        width: 220px;
+
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        transition: 0.3s;
+    }
+
+    .search-box input:focus {
+        border: 1px solid #6366f1;
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .search-box input::placeholder {
+        color: #94a3b8;
+    }
+
+    /* 🔗 LINKS */
     .nav-center a {
-        margin: 0 15px;
         text-decoration: none;
-        color: #cbd5f5;
+        color: #94a3b8;
         font-weight: 500;
         position: relative;
         transition: 0.3s;
     }
 
-    /* HOVER UNDERLINE EFFECT */
+    .nav-center a:hover {
+        color: #fff;
+    }
+
+    /* underline glow */
     .nav-center a::after {
         content: "";
         position: absolute;
@@ -189,7 +100,7 @@
         height: 2px;
         bottom: -5px;
         left: 0;
-        background: #38bdf8;
+        background: linear-gradient(90deg, #38bdf8, #6366f1);
         transition: 0.3s;
     }
 
@@ -197,76 +108,193 @@
         width: 100%;
     }
 
-    .nav-center a:hover {
-        color: #fff;
-    }
+    /* ================= RIGHT ================= */
 
-    /* RIGHT SIDE */
     .nav-right {
         display: flex;
         align-items: center;
         gap: 15px;
+        position: relative;
     }
 
-    /* USER TEXT */
-    .user {
-        font-weight: 500;
-        color: #e2e8f0;
-    }
-
-    /* BUTTON */
+    /* 💎 BUTTON */
     .btn {
         padding: 8px 18px;
         border-radius: 999px;
-        background: linear-gradient(90deg, #38bdf8, #6366f1);
+        background: linear-gradient(135deg, #6366f1, #a855f7);
         color: white;
         text-decoration: none;
         font-size: 14px;
         font-weight: 600;
+
         transition: 0.3s;
     }
 
     .btn:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        box-shadow: 0 8px 20px rgba(168, 85, 247, 0.5);
     }
 
-    /* MENU TOGGLE (MOBILE) */
-    .menu-toggle {
-        display: none;
-        font-size: 24px;
+    /* 👤 USER BUTTON */
+    .user-btn {
+        padding: 8px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #cbd5f5;
         cursor: pointer;
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 768px) {
+    .user-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
 
-        .nav-center {
-            position: absolute;
-            top: 70px;
-            left: 0;
-            width: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            flex-direction: column;
-            text-align: center;
-            display: none;
-            padding: 20px 0;
-        }
+    /* ================= DROPDOWN ================= */
 
-        .nav-center a {
-            display: block;
-            margin: 10px 0;
-        }
+    .dropdown {
+        position: absolute;
+        right: 0;
+        top: 50px;
+        width: 180px;
 
-        .menu-toggle {
-            display: block;
-        }
+        background: rgba(2, 6, 23, 0.95);
+        backdrop-filter: blur(20px);
 
-        .nav-center.active {
-            display: flex;
-        }
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+
+        display: none;
+    }
+
+    .dropdown a {
+        display: block;
+        padding: 12px;
+        color: #94a3b8;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    .dropdown a:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+    }
+
+    .dropdown.show {
+        display: block;
+    }
+
+    /* ================= CART BUTTON ================= */
+
+    .cart-btn {
+        position: relative;
+    }
+
+    /* 🔴 BADGE */
+    .cart-badge {
+        position: absolute;
+        top: -5px;
+        right: -8px;
+
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white;
+        font-size: 10px;
+        padding: 3px 6px;
+        border-radius: 50%;
+    }
+
+    /* ================= CART POPUP ================= */
+
+    .cart-popup {
+        position: absolute;
+        top: 65px;
+        right: 0;
+        display: none;
+        z-index: 9999;
+    }
+
+    .cart-popup.active {
+        display: block;
+    }
+
+    /* ================= UIVERSE CART STYLE ================= */
+
+    .master-container {
+        display: grid;
+        gap: 8px;
+    }
+
+    .card {
+        width: 400px;
+        background: #ffffff;
+        border-radius: 16px;
+
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .title {
+        padding: 12px 20px;
+        border-bottom: 1px solid #eee;
+        font-size: 12px;
+        font-weight: 700;
+        color: #555;
+    }
+
+    /* PRODUCTS */
+    .product {
+        display: grid;
+        grid-template-columns: 60px 1fr 80px 1fr;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    /* QUANTITY */
+    .quantity {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+    }
+
+    .quantity button {
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+
+    /* CHECKOUT BUTTON */
+    .checkout-btn {
+        background: linear-gradient(135deg, #6366f1, #a855f7);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .checkout-btn:hover {
+        box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
     }
 </style>
+<script>
+    function toggleCart() {
+        const popup = document.getElementById("cartPopup");
+
+        popup.classList.toggle("active");
+
+        if (popup.classList.contains("active")) {
+            fetch('/shop/cart/', {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(res => res.text())
+                .then(data => {
+                    popup.innerHTML = data;
+                });
+        }
+    }
+</script>
 <script>
     function toggleDropdown() {
         document.getElementById("dropdown").classList.toggle("show");
@@ -289,45 +317,52 @@
     <div class="nav-container">
 
         <!-- LEFT -->
-        <div class="nav-right">
+        <div class="brand">FLOW</div>
 
-            <span class="brand">KAXONisLIVE</span>
-        </div>
-
-        <!-- CENTER (optional search later) -->
+        <!-- CENTER -->
         <div class="nav-center">
-            <a href="{% url 'home' %}">Home</a>
 
+            <!-- 🔍 SEARCH -->
+            <div class="search-box">
+                <input type="text" placeholder="Search products...">
+            </div>
+
+            <!-- LINKS -->
+            <a href="{% url 'home' %}">Home</a>
             <a href="#">Explore</a>
 
-            <a href="{% url 'cart' %}">Cart</a>
         </div>
 
+        <!-- RIGHT -->
         <div class="nav-right">
+
             {% if request.user.is_authenticated %}
             <div class="user-menu">
                 <button class="user-btn" onclick="toggleDropdown()">
-                    👤 {{ request.user.username }} ⬇
+                    👤 {{ request.user.username }}
                 </button>
 
                 <div id="dropdown" class="dropdown">
                     <a href="#">Profile</a>
+                    <a href="#">Orders</a>
                     <a href="{% url 'logout' %}">Logout</a>
                 </div>
             </div>
             {% else %}
-            <a href="{% url 'login' %}" class="login-btn">Login</a>
+            <a href="{% url 'login' %}" class="btn">Login</a>
             {% endif %}
-        </div>
 
+            <!-- 🛒 CART -->
+            <button class="btn cart-btn" onclick="toggleCart()">
+                🛒 Cart
+                <span class="cart-badge">0</span>
+            </button>
 
-
-
-
-        <!-- MOBILE MENU BUTTON -->
-        <div class="menu-toggle" id="menuToggle">
-            ☰
         </div>
 
     </div>
+</nav>
+
+<!-- POPUP -->
+<div id="cartPopup" class="cart-popup"></div>
 </nav>
