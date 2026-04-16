@@ -13,6 +13,137 @@
 
     {% block content %}
     {% endblock %}
+<script>
+
+console.log("SCRIPT LOADED ✅");
+
+// 🔐 CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        for (let cookie of document.cookie.split(';')) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// 🔥 MAIN EVENT (ONLY ONE)
+document.addEventListener("click", function (e) {
+
+    const btn = e.target.closest("button");
+    if (!btn) return;
+
+    console.log("CLICK DETECTED 🔥");
+
+    // ======================
+    // 🛒 QUANTITY UPDATE
+    // ======================
+    if (btn.classList.contains("qty-btn")) {
+
+        const cartId = btn.dataset.id;
+        const action = btn.dataset.action;
+
+        console.log("QTY:", cartId, action);
+
+        fetch(`/shop/update/${cartId}/${action}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+
+            console.log("RESPONSE:", data);
+
+            // ❌ item delete
+            if (data.deleted) {
+                document.getElementById(`item-${cartId}`)?.remove();
+                return;
+            }
+
+            // 🔢 quantity
+            const qtyEl = document.getElementById(`qty-${cartId}`);
+            if (qtyEl) qtyEl.innerText = data.quantity;
+
+            // 💰 item total
+            const priceEl = document.getElementById(`price-${cartId}`);
+            if (priceEl) priceEl.innerText = "₹" + data.item_total;
+
+            // 🔥 NEW: subtotal / shipping / tax
+            const subtotalEl = document.getElementById("subtotal");
+            const shippingEl = document.getElementById("shipping");
+            const taxEl = document.getElementById("tax");
+
+            if (subtotalEl) subtotalEl.innerText = "₹" + data.subtotal;
+            if (shippingEl) shippingEl.innerText = "₹" + data.shipping;
+            if (taxEl) taxEl.innerText = "₹" + data.tax;
+
+            // 🧾 FINAL TOTAL
+            const totalTop = document.getElementById("cart-total");
+            const totalFooter = document.getElementById("cart-total-footer");
+
+            if (totalTop) totalTop.innerText = "₹" + data.final_total;
+            if (totalFooter) totalFooter.innerText = "₹" + data.final_total;
+
+        });
+
+    }
+
+    // ======================
+    // 💳 CHECKOUT
+    // ======================
+    if (btn.classList.contains("checkout-btn")) {
+
+        console.log("CHECKOUT CLICK 🔥");
+
+        btn.innerText = "Processing...";
+        btn.disabled = true;
+
+        fetch("/shop/checkout/", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+
+            console.log("CHECKOUT RESPONSE:", data);
+
+            if (data.success) {
+
+                btn.innerText = "✔ Order Placed";
+
+                // 🛒 empty cart UI
+                document.querySelector(".products").innerHTML =
+                    "<p style='padding:20px;'>Cart is empty</p>";
+
+                // reset totals
+                document.getElementById("subtotal").innerText = "₹0";
+                document.getElementById("shipping").innerText = "₹0";
+                document.getElementById("tax").innerText = "₹0";
+                document.getElementById("cart-total").innerText = "₹0";
+                document.getElementById("cart-total-footer").innerText = "₹0";
+
+            } else {
+                btn.innerText = "Checkout";
+                btn.disabled = false;
+                alert("Something went wrong ❌");
+            }
+
+        });
+
+    }
+
+});
+
+</script>
 
 </body>
 

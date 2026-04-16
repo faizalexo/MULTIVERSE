@@ -62,7 +62,7 @@
 
                 // ✅ SUCCESS
                 if (data.success) {
-                    btn.innerText = "Added ✅";
+                    btn.innerText = "Added to Cart";
                     btn.disabled = true;
 
                     // 🔥 👉 YAHI ADD KARNA THA
@@ -85,6 +85,11 @@
             });
     }
 </script>
+{% block scripts %}
+<script>
+console.log("SCRIPT WORKING ✅");
+</script>
+{% endblock %}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 

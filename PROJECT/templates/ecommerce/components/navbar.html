@@ -2,279 +2,239 @@
 <html lang="en">
 <title>Navbar</title>
 <style>
-    /* 🔥 GLOBAL RESET */
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Segoe UI', sans-serif;
-    }
+  /* ================= GLOBAL ================= */
+:root {
+    --bg-main: #020617;
+    --bg-glass: rgba(15, 23, 42, 0.7);
+    --border: rgba(255, 255, 255, 0.08);
 
-    /* 🌌 PREMIUM BACKGROUND */
-    body {
-        background: radial-gradient(circle at top, #0f172a, #020617);
-        color: #e2e8f0;
-    }
+    --text-main: #e2e8f0;
+    --text-muted: #94a3b8;
 
-    /* ================= NAVBAR ================= */
+    --accent: #6366f1;
+    --accent-2: #a855f7;
+    --danger: #ef4444;
 
-    .navbar {
-        position: sticky;
-        top: 0;
-        width: 100%;
-        backdrop-filter: blur(20px);
-        background: rgba(2, 6, 23, 0.7);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        z-index: 1000;
-    }
+    --radius: 16px;
+}
 
-    .nav-container {
-        max-width: 1300px;
-        margin: auto;
-        padding: 16px 25px;
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
 
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+/* BODY */
+body {
+    background: radial-gradient(circle at top, #0f172a, #020617);
+    color: var(--text-main);
+}
 
-    /* 💎 BRAND */
-    .brand {
-        font-size: 22px;
-        font-weight: 700;
-        letter-spacing: 1px;
+/* ================= NAVBAR ================= */
+.navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    backdrop-filter: blur(20px);
+    background: var(--bg-glass);
+    border-bottom: 1px solid var(--border);
+    z-index: 1000;
+}
 
-        background: linear-gradient(90deg, #38bdf8, #6366f1, #a855f7);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+.nav-container {
+    max-width: 1300px;
+    margin: auto;
+    padding: 16px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-    /* ================= CENTER ================= */
+/* BRAND */
+.brand {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #38bdf8, #6366f1, #a855f7);
+    -webkit-background-clip: text;
+    background-clip: text; /* 🔥 FIX */
+    -webkit-text-fill-color: transparent;
+}
 
-    .nav-center {
-        display: flex;
-        align-items: center;
-        gap: 25px;
-    }
+/* CENTER */
+.nav-center {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
 
-    /* 🔍 SEARCH */
-    .search-box input {
-        padding: 10px 16px;
-        border-radius: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        width: 220px;
+.nav-center a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
 
-        background: rgba(255, 255, 255, 0.05);
-        color: white;
-        transition: 0.3s;
-    }
+.nav-center a:hover {
+    color: white;
+}
 
-    .search-box input:focus {
-        border: 1px solid #6366f1;
-        box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
-    }
+/* SEARCH */
+.search-box input {
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    outline: none;
+}
 
-    .search-box input::placeholder {
-        color: #94a3b8;
-    }
+.search-box input:focus {
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+}
 
-    /* 🔗 LINKS */
-    .nav-center a {
-        text-decoration: none;
-        color: #94a3b8;
-        font-weight: 500;
-        position: relative;
-        transition: 0.3s;
-    }
+/* ================= BUTTONS ================= */
+.btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s;
+}
 
-    .nav-center a:hover {
-        color: #fff;
-    }
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
+}
 
-    /* underline glow */
-    .nav-center a::after {
-        content: "";
-        position: absolute;
-        width: 0%;
-        height: 2px;
-        bottom: -5px;
-        left: 0;
-        background: linear-gradient(90deg, #38bdf8, #6366f1);
-        transition: 0.3s;
-    }
+/* USER BTN */
+.user-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    border-radius: 999px;
+    color: var(--text-muted);
+}
 
-    .nav-center a:hover::after {
-        width: 100%;
-    }
+.user-btn:hover {
+    color: white;
+}
 
-    /* ================= RIGHT ================= */
+/* ================= DROPDOWN ================= */
+.dropdown {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 180px;
+    background: rgba(2, 6, 23, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    display: none;
+}
 
-    .nav-right {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        position: relative;
-    }
+.dropdown.show {
+    display: block;
+}
 
-    /* 💎 BUTTON */
-    .btn {
-        padding: 8px 18px;
-        border-radius: 999px;
-        background: linear-gradient(135deg, #6366f1, #a855f7);
-        color: white;
-        text-decoration: none;
-        font-size: 14px;
-        font-weight: 600;
+/* ================= CART ================= */
+.cart-btn {
+    position: relative;
+}
 
-        transition: 0.3s;
-    }
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background: var(--danger);
+    font-size: 10px;
+    padding: 3px 6px;
+    border-radius: 50%;
+}
 
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(168, 85, 247, 0.5);
-    }
+/* POPUP */
+.cart-popup {
+    position: absolute;
+    top: 65px;
+    right: 0;
+    display: none;
+}
 
-    /* 👤 USER BUTTON */
-    .user-btn {
-        padding: 8px 14px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        color: #cbd5f5;
-        cursor: pointer;
-    }
+.cart-popup.active {
+    display: block;
+}
+/* ================= CARD ================= */
+.card {
+    width: 400px;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(20px);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    transition: 0.3s;
+}
 
-    .user-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
-    }
+.card:hover {
+    transform: translateY(-5px);
+}
 
-    /* ================= DROPDOWN ================= */
+/* TITLE */
+.title {
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+}
 
-    .dropdown {
-        position: absolute;
-        right: 0;
-        top: 50px;
-        width: 180px;
+/* PRODUCT */
+.product {
+    display: grid;
+    grid-template-columns: 60px 1fr 80px 1fr;
+    gap: 10px;
+    padding: 12px;
+}
 
-        background: rgba(2, 6, 23, 0.95);
-        backdrop-filter: blur(20px);
+/* QUANTITY */
+.quantity {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+}
 
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+.quantity button {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
 
-        display: none;
-    }
+.quantity button:hover {
+    background: rgba(255,255,255,0.05);
+}
 
-    .dropdown a {
-        display: block;
-        padding: 12px;
-        color: #94a3b8;
-        text-decoration: none;
-        transition: 0.3s;
-    }
+/* ================= CHECKOUT ================= */
+.checkout-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
 
-    .dropdown a:hover {
-        background: rgba(255, 255, 255, 0.05);
-        color: #fff;
-    }
-
-    .dropdown.show {
-        display: block;
-    }
-
-    /* ================= CART BUTTON ================= */
-
-    .cart-btn {
-        position: relative;
-    }
-
-    /* 🔴 BADGE */
-    .cart-badge {
-        position: absolute;
-        top: -5px;
-        right: -8px;
-
-        background: linear-gradient(135deg, #ef4444, #dc2626);
-        color: white;
-        font-size: 10px;
-        padding: 3px 6px;
-        border-radius: 50%;
-    }
-
-    /* ================= CART POPUP ================= */
-
-    .cart-popup {
-        position: absolute;
-        top: 65px;
-        right: 0;
-        display: none;
-        z-index: 9999;
-    }
-
-    .cart-popup.active {
-        display: block;
-    }
-
-    /* ================= UIVERSE CART STYLE ================= */
-
-    .master-container {
-        display: grid;
-        gap: 8px;
-    }
-
-    .card {
-        width: 400px;
-        background: #ffffff;
-        border-radius: 16px;
-
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    }
-
-    .title {
-        padding: 12px 20px;
-        border-bottom: 1px solid #eee;
-        font-size: 12px;
-        font-weight: 700;
-        color: #555;
-    }
-
-    /* PRODUCTS */
-    .product {
-        display: grid;
-        grid-template-columns: 60px 1fr 80px 1fr;
-        gap: 10px;
-        padding: 10px;
-    }
-
-    /* QUANTITY */
-    .quantity {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-    }
-
-    .quantity button {
-        border: none;
-        background: none;
-        cursor: pointer;
-    }
-
-    /* CHECKOUT BUTTON */
-    .checkout-btn {
-        background: linear-gradient(135deg, #6366f1, #a855f7);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 10px;
-        cursor: pointer;
-    }
-
-    .checkout-btn:hover {
-        box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
-    }
+.checkout-btn:hover {
+    box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
+    transform: scale(1.03);
+}
 </style>
 <script>
     function toggleCart() {
@@ -306,12 +266,14 @@
             if (dropdown) dropdown.classList.remove("show");
         }
     });
-    const menuToggle = document.getElementById('menuToggle');
-    const navCenter = document.querySelector('.nav-center');
+    const menuToggle = document.querySelector('.menu-toggle');
+const navCenter = document.querySelector('.nav-center');
 
+if (menuToggle && navCenter) {
     menuToggle.addEventListener('click', () => {
         navCenter.classList.toggle('active');
     });
+}
 </script>
 <nav class="navbar">
     <div class="nav-container">
@@ -330,6 +292,7 @@
             <!-- LINKS -->
             <a href="{% url 'home' %}">Home</a>
             <a href="#">Explore</a>
+            <a href="{% url 'product_list' %}">Products</a>
 
         </div>
 
@@ -355,7 +318,7 @@
             <!-- 🛒 CART -->
             <button class="btn cart-btn" onclick="toggleCart()">
 
-                🛒 Cart (<span id="cart-count">0</span>)
+                🛒 
             </button>
 
         </div>

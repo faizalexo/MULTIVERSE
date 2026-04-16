@@ -1,86 +1,110 @@
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/ecommerce.css' %}">
+
 <div class="master-container">
 
-    <!-- 🛒 CART -->
-    <div class="card cart">
-        <label class="title">Your cart</label>
+  <!-- 🛒 CART -->
+  <div class="card cart">
+    <label class="title">Your cart</label>
 
-        <div class="products">
-            {% for item in cart_items %}
-            <div class="product">
-                <div>
-                    <span>{{ item.product.name }}</span>
-                    <p>₹{{ item.product.price }}</p>
-                </div>
+    <div class="products">
 
-                <div class="quantity">
-                    <button onclick="updateCart('{{ item.id }}', 'decrease')">-</button>
+      {% for item in cart_items %}
+      <div class="product" id="item-{{ item.id }}">
 
-                    <label id="qty-{{ item.id }}">{{ item.quantity }}</label>
+        <svg fill="none" viewBox="0 0 60 60" height="60" width="60">
+          <rect fill="#FFF6EE" rx="8.25" height="60" width="60"></rect>
+        </svg>
 
-                    <button onclick="updateCart('{{ item.id }}', 'increase')">+</button>
-                </div>
-
-                <label class="price small">₹{{ item.product.price }}</label>
-            </div>
-            {% endfor %}
+        <div>
+          <span>{{ item.product.name }}</span>
+          <p>₹{{ item.product.price }}</p>
         </div>
+
+        <!-- 🔥 QUANTITY -->
+         
+        <div class="quantity">
+          <button class="qty-btn" data-id="{{ item.id }}" data-action="decrease">-</button>
+
+          <label id="qty-{{ item.id }}">{{ item.quantity }}</label>
+
+          <button class="qty-btn" data-id="{{ item.id }}" data-action="increase">+</button>
+        </div>
+        
+
+        <!-- 💰 PRICE -->
+        <label class="price small" id="price-{{ item.id }}">
+          ₹{{ item.product.price|floatformat:2 }}
+        </label>
+
+      </div>
+      {% empty %}
+      <p style="padding:20px;">Cart is empty</p>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <!-- 🎟 COUPON -->
+  <div class="card coupons">
+    <label class="title">Apply coupons</label>
+    <form class="form">
+      <input type="text" placeholder="Apply your coupons here" class="input_field">
+      <button type="button">Apply</button>
+    </form>
+  </div>
+
+  <!-- 💳 CHECKOUT -->
+  <div class="card checkout">
+    <label class="title">Checkout</label>
+
+    <div class="details">
+      <span>Your cart subtotal:</span>
+      <span id="cart-total">₹{{ total }}</span>
+
+      <span>Shipping:</span>
+      <span id="shipping">₹{{ shipping }}</span>
+
+      <span>Tax:</span>
+      <span id="tax">₹{{ tax }}</span>
     </div>
 
-    <!-- 🧾 CHECKOUT DETAILS -->
-    <div class="card cart">
-        <label class="title">CHECKOUT</label>
+    <div class="checkout--footer">
+      <label class="price" id="cart-total-footer">₹{{ total }}</label>
 
-        <div class="steps">
-            <div class="step">
-                <span>SHIPPING</span>
-                <p>{{ user.username }}</p>
-                <p>India</p>
-
-                <hr>
-
-                <span>PAYMENT METHOD</span>
-                <p>Demo Mode</p>
-
-                <hr>
-
-                <div class="details">
-                    <span>Subtotal:</span>
-                    <span id="cart-total">₹{{ total }}</span>
-                </div>
-            </div>
-        </div>
+      <button class="checkout-btn">Checkout</button>
     </div>
-
-    <!-- 💳 FINAL CHECKOUT -->
-    <div class="card checkout">
-        <div class="checkout--footer">
-            <label class="price" id="cart-total-footer">₹{{ total }}</label>
-
-            <button class="checkout-btn" onclick="checkout()">
-                Checkout
-            </button>
-        </div>
-    </div>
+  </div>
 
 </div>
+{% endblock %}
 
+{% block scripts %}
 <script>
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            for (let cookie of document.cookie.split(';')) {
-                cookie = cookie.trim();
-                if (cookie.startsWith(name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-</script>
-<script>
-    function updateCart(cartId, action) {
+
+
+
+console.log("SCRIPT LOADED ✅");
+
+document.addEventListener("click", function (e) {
+
+    const btn = e.target.closest("button");
+
+    if (!btn) return;
+
+    console.log("CLICK DETECTED 🔥");
+
+    // ======================
+    // QUANTITY
+    // ======================
+    if (btn.classList.contains("qty-btn")) {
+
+        const cartId = btn.dataset.id;
+        const action = btn.dataset.action;
+
+        console.log("QTY:", cartId, action);
 
         fetch(`/shop/update/${cartId}/${action}/`, {
             method: "POST",
@@ -88,55 +112,130 @@
                 "X-CSRFToken": getCookie("csrftoken"),
             }
         })
-            .then(res => res.json())
-            .then(data => {
+        .then(res => res.json())
+        .then(data => {
+            console.log("RESPONSE:", data);
+        });
 
-                // ❌ item delete
-                if (data.deleted) {
-                    document.getElementById(`item-${cartId}`).remove();
-                } else {
-                    // 🔢 quantity update
-                    document.getElementById(`qty-${cartId}`).innerText = data.quantity;
-
-                    // 💰 item total update
-                    document.getElementById(`price-${cartId}`).innerText = "₹" + data.item_total;
-                }
-
-                // 🛒 cart total update
-                document.getElementById("cart-total").innerText = "₹" + data.cart_total;
-                document.getElementById("cart-total-footer").innerText = "₹" + data.cart_total;
-
-            })
-            .catch(err => {
-                console.error(err);
-            });
     }
-</script>
 
+    // ======================
+    // CHECKOUT
+    // ======================
+    if (btn.classList.contains("checkout-btn")) {
 
-<script>
-    function checkout() {
+        console.log("CHECKOUT CLICK 🔥");
 
-        const btn = document.querySelector(".checkout-btn");
+        fetch("/shop/checkout/", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("CHECKOUT RESPONSE:", data);
+        });
 
-        // 🔄 loading
+    }
+
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        for (let cookie of document.cookie.split(';')) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+document.addEventListener("click", function (e) {
+
+    // 🔥 FIX: button ya svg click dono handle
+    const btn = e.target.closest("button");
+
+    if (!btn) return;
+
+    // ======================
+    // ✅ QUANTITY
+    // ======================
+    if (btn.classList.contains("qty-btn")) {
+
+        const cartId = btn.dataset.id;
+        const action = btn.dataset.action;
+
+        console.log("QTY CLICK", cartId, action);
+
+        fetch(`/shop/update/${cartId}/${action}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+
+            if (data.deleted) {
+                document.getElementById(`item-${cartId}`)?.remove();
+                return;
+            }
+
+            document.getElementById(`qty-${cartId}`).innerText = data.quantity;
+            document.getElementById(`price-${cartId}`).innerText = "₹" + data.item_total;
+
+            document.getElementById("cart-total").innerText = "₹" + data.cart_total;
+            document.getElementById("cart-total-footer").innerText = "₹" + data.cart_total;
+
+        });
+
+    }
+
+    // ======================
+    // ✅ CHECKOUT
+    // ======================
+    if (btn.classList.contains("checkout-btn")) {
+
+        console.log("CHECKOUT CLICK 🔥");
+
         btn.innerText = "Processing...";
         btn.disabled = true;
 
-        setTimeout(() => {
+        fetch("/shop/checkout/", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
 
-            // 🎉 success popup
-            const popup = document.getElementById("order-success");
-            popup.style.display = "block";
+            if (data.success) {
 
-            // reset button
-            btn.innerText = "Checkout";
-            btn.disabled = false;
+                btn.innerText = "✔ Order Placed";
 
-            // 🧹 cart empty (UI only)
-            document.querySelector(".products").innerHTML =
-                "<p style='padding:20px;'>Cart is empty</p>";
+                document.querySelector(".products").innerHTML =
+                    "<p style='padding:20px;'>Cart is empty</p>";
 
-        }, 2000);
+                document.getElementById("cart-total").innerText = "₹0";
+                document.getElementById("cart-total-footer").innerText = "₹0";
+
+            } else {
+                btn.innerText = "Checkout";
+                btn.disabled = false;
+                alert("Error");
+            }
+
+        });
+
     }
+
+});
+
 </script>
+{% endblock %}

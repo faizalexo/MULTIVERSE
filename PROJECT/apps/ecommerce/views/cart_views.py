@@ -77,6 +77,7 @@ def remove_from_cart(request, cart_id):
 
 
 @login_required
+@login_required
 def update_cart(request, cart_id, action):
 
     item = get_object_or_404(Cart, id=cart_id, user=request.user)
@@ -95,13 +96,22 @@ def update_cart(request, cart_id, action):
 
     # 💰 calculations
     item_total = item.product.price * item.quantity
+
     cart_items = Cart.objects.filter(user=request.user)
-    cart_total = sum(i.product.price * i.quantity for i in cart_items)
+    subtotal = sum(i.product.price * i.quantity for i in cart_items)
+
+    # 🔥 NEW LOGIC
+    shipping = 0 if subtotal > 10000 else 50   # free shipping rule
+    tax = int(subtotal * 0.05)               # 5% tax
+    final_total = subtotal + shipping + tax
 
     return JsonResponse({
         "quantity": item.quantity,
         "item_total": item_total,
-        "cart_total": cart_total,
+        "subtotal": subtotal,
+        "shipping": shipping,
+        "tax": tax,
+        "final_total": final_total,
         "deleted": False
     })
 
