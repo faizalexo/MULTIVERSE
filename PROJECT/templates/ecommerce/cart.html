@@ -5,20 +5,13 @@
         <label class="title">Your cart</label>
 
         <div class="products">
-
             {% for item in cart_items %}
-            <div class="product" id="item-{{ item.id }}">
-
-                <svg fill="none" viewBox="0 0 60 60" height="60" width="60">
-                    <rect fill="#FFF6EE" rx="8.25" height="60" width="60"></rect>
-                </svg>
-
+            <div class="product">
                 <div>
                     <span>{{ item.product.name }}</span>
                     <p>₹{{ item.product.price }}</p>
                 </div>
 
-                <!-- 🔥 UPDATED QUANTITY (NO RELOAD) -->
                 <div class="quantity">
                     <button onclick="updateCart('{{ item.id }}', 'decrease')">-</button>
 
@@ -27,70 +20,96 @@
                     <button onclick="updateCart('{{ item.id }}', 'increase')">+</button>
                 </div>
 
-                <!-- 🔥 ITEM TOTAL -->
-                <label class="price small" id="price-{{ item.id }}">
-                    ₹{{ item.product.price|floatformat:2 }}
-                </label>
-
+                <label class="price small">₹{{ item.product.price }}</label>
             </div>
-            {% empty %}
-            <p style="padding:20px;">Cart is empty</p>
             {% endfor %}
-
         </div>
     </div>
 
-    <!-- 💰 CHECKOUT -->
-    <div class="card checkout">
-        <label class="title">Checkout</label>
+    <!-- 🧾 CHECKOUT DETAILS -->
+    <div class="card cart">
+        <label class="title">CHECKOUT</label>
 
-        <div class="details">
-            <span>Total:</span>
-            <span id="cart-total">₹{{ total }}</span>
+        <div class="steps">
+            <div class="step">
+                <span>SHIPPING</span>
+                <p>{{ user.username }}</p>
+                <p>India</p>
+
+                <hr>
+
+                <span>PAYMENT METHOD</span>
+                <p>Demo Mode</p>
+
+                <hr>
+
+                <div class="details">
+                    <span>Subtotal:</span>
+                    <span id="cart-total">₹{{ total }}</span>
+                </div>
+            </div>
         </div>
+    </div>
 
+    <!-- 💳 FINAL CHECKOUT -->
+    <div class="card checkout">
         <div class="checkout--footer">
             <label class="price" id="cart-total-footer">₹{{ total }}</label>
-            <button class="checkout-btn" onclick="checkout()">Checkout</button>
+
+            <button class="checkout-btn" onclick="checkout()">
+                Checkout
+            </button>
         </div>
     </div>
 
 </div>
 
 <script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            for (let cookie of document.cookie.split(';')) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+<script>
     function updateCart(cartId, action) {
-        fetch(`/shop/update/${cartId}/${action}/`)
+
+        fetch(`/shop/update/${cartId}/${action}/`, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+            }
+        })
             .then(res => res.json())
             .then(data => {
 
                 // ❌ item delete
                 if (data.deleted) {
                     document.getElementById(`item-${cartId}`).remove();
-                    updateTotal();
-                    return;
+                } else {
+                    // 🔢 quantity update
+                    document.getElementById(`qty-${cartId}`).innerText = data.quantity;
+
+                    // 💰 item total update
+                    document.getElementById(`price-${cartId}`).innerText = "₹" + data.item_total;
                 }
 
-                // 🔢 quantity update
-                document.getElementById(`qty-${cartId}`).innerText = data.quantity;
+                // 🛒 cart total update
+                document.getElementById("cart-total").innerText = "₹" + data.cart_total;
+                document.getElementById("cart-total-footer").innerText = "₹" + data.cart_total;
 
-                // 💰 item price update
-                document.getElementById(`price-${cartId}`).innerText = "₹" + data.price;
-
-                updateTotal();
+            })
+            .catch(err => {
+                console.error(err);
             });
-    }
-
-
-    // 🔥 TOTAL AUTO UPDATE
-    function updateTotal() {
-        let total = 0;
-
-        document.querySelectorAll("[id^='price-']").forEach(el => {
-            total += parseFloat(el.innerText.replace("₹", ""));
-        });
-
-        document.getElementById("cart-total").innerText = "₹" + total;
-        document.getElementById("cart-total-footer").innerText = "₹" + total;
     }
 </script>
 

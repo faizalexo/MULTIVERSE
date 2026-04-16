@@ -1,6 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from apps.ecommerce.models import Cart, Product
+from django.contrib import messages
+from apps.ecommerce.models import Cart, Order, OrderItem
+
+
 
 
 # 🛒 VIEW CART (sidebar + page both support)
@@ -25,20 +31,34 @@ def cart_view(request):
 
 
 # ➕ ADD TO CART
+
+
 @login_required
+@require_POST
 def add_to_cart(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
 
-    cart_item, created = Cart.objects.get_or_create(
-        user=request.user,
-        product=product
-    )
+    if request.method == "POST":
 
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
+        product = get_object_or_404(Product, id=product_id)
 
-    return redirect('cart')
+        cart_item, created = Cart.objects.get_or_create(
+            user=request.user,
+            product=product
+        )
+
+        if not created:
+            cart_item.quantity += 1
+            cart_item.save()
+
+        # 🛒 cart count
+        cart_count = Cart.objects.filter(user=request.user).count()
+
+        return JsonResponse({
+            "success": True,
+            "cart_count": cart_count
+        })
+
+    return JsonResponse({"success": False})
 
 
 # ❌ REMOVE ITEM
@@ -50,48 +70,61 @@ def remove_from_cart(request, cart_id):
     return redirect('cart')
 
 
-# 🔼 INCREASE
-@login_required
-def increase_quantity(request, cart_id):
-    item = get_object_or_404(Cart, id=cart_id, user=request.user)
-    item.quantity += 1
-    item.save()
-
-    return redirect('cart')
 
 
-# 🔽 DECREASE
-@login_required
-def decrease_quantity(request, cart_id):
-    item = get_object_or_404(Cart, id=cart_id, user=request.user)
 
-    if item.quantity > 1:
-        item.quantity -= 1
-        item.save()
-    else:
-        item.delete()
 
-    return redirect('cart')
 
-    from django.http import JsonResponse
 
 @login_required
 def update_cart(request, cart_id, action):
+
     item = get_object_or_404(Cart, id=cart_id, user=request.user)
 
-    if action == 'increase':
+    if action == "increase":
         item.quantity += 1
+        item.save()
 
-    elif action == 'decrease':
+    elif action == "decrease":
         if item.quantity > 1:
             item.quantity -= 1
+            item.save()
         else:
             item.delete()
-            return JsonResponse({'deleted': True})
+            return JsonResponse({"deleted": True})
 
-    item.save()
+    # 💰 calculations
+    item_total = item.product.price * item.quantity
+    cart_items = Cart.objects.filter(user=request.user)
+    cart_total = sum(i.product.price * i.quantity for i in cart_items)
 
     return JsonResponse({
-        'quantity': item.quantity,
-        'price': item.product.price * item.quantity
+        "quantity": item.quantity,
+        "item_total": item_total,
+        "cart_total": cart_total,
+        "deleted": False
     })
+
+
+@login_required
+def checkout(request):
+    if request.method == "POST":
+        cart_items = Cart.objects.filter(user=request.user)
+
+        total = sum(item.product.price * item.quantity for item in cart_items)
+
+        order = Order.objects.create(
+            user=request.user,
+            total_amount=total
+        )
+
+        for item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=item.product,
+                quantity=item.quantity
+            )
+
+        cart_items.delete()
+
+        return JsonResponse({'success': True})

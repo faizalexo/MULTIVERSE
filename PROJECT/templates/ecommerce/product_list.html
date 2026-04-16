@@ -15,7 +15,7 @@
             <h3>{{ product.name }}</h3>
             <p class="price">₹{{ product.price }}</p>
 
-            <button onclick="addToCart({{ product.id }})" class="add-btn">
+            <button class="add-btn" data-url="{% url 'add_to_cart' product.id %}" onclick="addToCart(this)">
                 Add to Cart
             </button>
         </div>
@@ -26,12 +26,77 @@
 </div>
 
 <script>
-    function addToCart(productId) {
-        fetch(`/shop/add/${productId}/`)
-            .then(() => {
-                alert("Added to cart 🛒");
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            for (let cookie of document.cookie.split(';')) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+<script>
+    function addToCart(btn) {
+        const url = btn.dataset.url;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        })
+            .then(res => res.text())
+            .then(data => {
+
+                try {
+                    data = JSON.parse(data);
+                } catch {
+                    console.error("Not JSON");
+                    return;
+                }
+
+                // ✅ SUCCESS
+                if (data.success) {
+                    btn.innerText = "Added ✅";
+                    btn.disabled = true;
+
+                    // 🔥 👉 YAHI ADD KARNA THA
+                    if (data.cart_count !== undefined) {
+                        const cartCount = document.getElementById("cart-count");
+
+                        if (cartCount) {
+                            cartCount.innerText = data.cart_count;
+                        }
+                    }
+
+                } else {
+                    alert("Error adding product");
+                }
+
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Something went wrong");
             });
     }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const el = document.getElementById("cart-btn");
+
+        if (el) {
+            el.addEventListener("click", () => {
+                openCart();
+            });
+        }
+
+    });
 </script>
 
 {% endblock %}
