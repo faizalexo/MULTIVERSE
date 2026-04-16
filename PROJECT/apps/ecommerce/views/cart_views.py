@@ -2,6 +2,12 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from apps.ecommerce.models import Cart, Product
 
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def cart(request):
+    return render(request, 'ecommerce/cart.html')
+
 @login_required
 def add_to_cart(request, product_id):
     product = Product.objects.get(id=product_id)

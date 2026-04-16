@@ -9,7 +9,7 @@ urlpatterns = [
 ]   
 
 urlpatterns = [
-    path('', home, name='home'),  # ✅ THIS is /shop/
+    path('', product_views.home, name='shop_home'),
     path('cart/', cart_views.view_cart,name='cart'),
     path('add/<int:product_id>/', cart_views.add_to_cart, name='add_to_cart'),
     path('remove/<int:cart_id>/', cart_views.remove_from_cart, name='remove_from_cart'),

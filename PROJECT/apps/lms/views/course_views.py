@@ -1,5 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from apps.lms.models import Course
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def course_list(request):
+    return render(request, 'lms/course_list.html')
 
 def course_list(request):
     courses = Course.objects.all()

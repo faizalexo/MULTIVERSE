@@ -1,0 +1,142 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn {
+    padding: 8px 16px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.logout {
+    background: #dc2626;
+}
+
+/* HERO */
+.hero {
+    text-align: center;
+    margin-top: 60px;
+}
+
+.hero h2 {
+    font-size: 32px;
+}
+
+/* CARDS */
+.card-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.card {
+    width: 250px;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.05);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* 🔥 TOAST CONTAINER */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+
+    width: 230px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0px 15px;
+
+    background-color: rgba(66, 66, 66, 0.9);
+    backdrop-filter: blur(10px);
+
+    border-radius: 10px;
+    color: white;
+
+    cursor: default;
+
+    transform: translateX(120%);
+    opacity: 0;
+    transition: 0.4s ease;
+}
+
+/* 🔥 SHOW ANIMATION */
+.toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* ICON */
+.bell {
+    width: 16px;
+}
+
+.bell path {
+    fill: rgb(0, 206, 62);
+}
+
+/* ARROW */
+.arrow {
+    position: absolute;
+    right: 10px;
+    font-size: 18px;
+}
+
+/* ENTRY ANIMATION */
+.toast.show .arrow {
+    animation: slide-right .6s ease-out both;
+}
+
+/* KEYFRAME */
+@keyframes slide-right {
+    0% {
+        transform: translateX(-10px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
