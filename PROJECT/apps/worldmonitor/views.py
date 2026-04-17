@@ -23,7 +23,7 @@ def index(request):
 
     query = random.choice(queries)
 
-    url = f"https://newsapi.org/v2/everything?q={query}&language=en&sortBy=publishedAt&pageSize=9&apiKey=c49f1ffc9cae4ef6bffb1f05405f798a"
+    url = f"https://newsapi.org/v2/everything?q={query}&language=en&sortBy=publishedAt&pageSize=9&apiKey=5ac64b4163c04d26b79cceb5f1416e70"
     
     
     """apikey-5ac64b4163c04d26b79cceb5f1416e70"""
@@ -93,8 +93,6 @@ def index(request):
     
 
 
-
-
 def cyberattacks(request):
     attacks = [
         {"country": "USA", "type": "DDoS", "severity": "High"},
@@ -146,9 +144,6 @@ def get_war_countries():
             countries.append("Ukraine")
 
     return list(set(countries))
-        
-        
-        
         
         
 
