@@ -2,15 +2,99 @@
 
 {% block content %}
 
+<style>
+/* GRID */
+.product-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 30px;
+    padding: 40px;
+}
 
-{% for product in products %}
-<div>
-    <h3>{{ product.name }}</h3>
-    <p>Price: {{ product.price }}</p>
+/* CARD */
+.product-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 15px;
 
-    <a href="/shop/add/{{ product.id }}/">Add to Cart</a>
+    border: 1px solid #eee;
+    transition: 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* IMAGE */
+.product-img img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* INFO */
+.product-info {
+    margin-top: 10px;
+}
+
+.product-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.product-price {
+    margin-top: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* BUTTON */
+.add-btn {
+    margin-top: 12px;
+    width: 100%;
+    padding: 10px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #111;
+    color: #fff;
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-btn:hover {
+    background: #333;
+}
+</style>
+
+<div class="product-container">
+
+    {% for product in products %}
+    <div class="product-card">
+
+        <!-- IMAGE -->
+        <div class="product-img">
+            <img src="{{ product.image.url }}" alt="">
+        </div>
+
+        <!-- INFO -->
+        <div class="product-info">
+            <div class="product-title">{{ product.name }}</div>
+            <div class="product-price">₹{{ product.price }}</div>
+
+            <!-- BUTTON -->
+            <a href="{% url 'add_to_cart' product.id %}">
+                <button class="add-btn">Add to Cart</button>
+            </a>
+        </div>
+
+    </div>
+    {% endfor %}
+
 </div>
-<hr>
-{% endfor %}
 
 {% endblock %}
