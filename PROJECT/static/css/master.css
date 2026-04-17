@@ -173,3 +173,124 @@ body {
         opacity: 1;
     }
 }
+
+
+
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY */
+body {
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    color: #111;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.nav-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn {
+    padding: 8px 16px;
+    background: #111;
+    color: #fff;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+/* HERO (CENTERED) */
+.hero {
+    text-align: center;
+    margin-top: 60px;
+}
+
+.hero h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #777;
+}
+
+/* SELECTOR */
+.app-selector {
+    text-align: center;
+    margin-top: 80px;
+}
+
+/* SLIDER FIX (IMPORTANT) */
+.tranding-slider {
+    width: 100%;
+    padding: 40px 0;
+}
+
+/* CARD */
+.app-card {
+    width: 400px;
+    height: 260px;
+
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 40px;
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* HOVER */
+.app-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+}
+
+/* TEXT */
+.app-card h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.app-card p {
+    color: #777;
+}
+
+/* SLIDER EFFECT */
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+
+    transform: scale(0.8);
+    opacity: 0.4;
+    transition: 0.3s;
+}
+
+.swiper-slide-active {
+    transform: scale(1);
+    opacity: 1;
+}

@@ -1,100 +1,249 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Dashboard</title>
 
-    <link rel="stylesheet" href="{% static 'css/master.css' %}">
+    <!-- SWIPER -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
 
-    <!-- 🔥 Toastify CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY */
+body {
+    font-family: Arial, sans-serif;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* 🎥 VIDEO BACKGROUND */
+.bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
+/* 🌑 OVERLAY */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: -1;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.nav-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.btn {
+    padding: 8px 16px;
+    background: #111;
+    color: #fff;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+/* HERO */
+.hero {
+    text-align: center;
+    margin-top: 80px;
+}
+
+.hero h2 {
+    font-size: 34px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #ccc;
+}
+
+/* SELECTOR */
+.app-selector {
+    margin-top: 80px;
+    text-align: center;
+}
+
+.app-selector h2 {
+    margin-bottom: 40px;
+    font-size: 24px;
+}
+
+/* SLIDER */
+.tranding-slider {
+    max-width: 1200px;
+    margin: auto;
+    padding: 40px 0;
+}
+
+/* CARD (GLASS EFFECT) */
+.app-card {
+    width: 380px;
+    height: 260px;
+
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 40px;
+    cursor: pointer;
+
+    transition: 0.35s ease;
+}
+
+/* HOVER */
+.app-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+
+/* TEXT */
+.app-card h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.app-card p {
+    color: #ddd;
+}
+
+/* SLIDER EFFECT */
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    transform: scale(0.8);
+    opacity: 0.4;
+    transition: 0.3s;
+}
+
+.swiper-slide-active {
+    transform: scale(1.05);
+    opacity: 1;
+}
+    </style>
 </head>
 
 <body>
 
-    <div class="container">
+<!-- 🎥 VIDEO -->
+<video autoplay muted loop playsinline class="bg-video">
+    <source src="{% static 'videos/bg.mp4' %}" type="video/mp4">
+</video>
 
-        <!-- HEADER -->
-        <div class="navbar">
-            <h1 class="logo">MULTIVERSE</h1>
+<!-- 🌑 OVERLAY -->
+<div class="overlay"></div>
 
-            <div class="nav-right">
-                {% if user.is_authenticated %}
-                <span>Welcome {{ user.username }}</span>
-                <a href="/logout/" class="btn logout">Logout</a>
-                {% else %}
-                <a href="/login/" class="btn">Login</a>
-                {% endif %}
+<div class="container">
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <h1 class="logo">MULTIVERSE</h1>
+
+        <div class="nav-right">
+            {% if user.is_authenticated %}
+            <span>Welcome {{ user.username }}</span>
+            <a href="/logout/" class="btn">Logout</a>
+            {% else %}
+            <a href="/login/" class="btn">Login</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+        <h2>Control Everything From One Place</h2>
+        <p>Access all systems with a single dashboard</p>
+    </div>
+
+    <!-- SELECTOR -->
+    <div class="app-selector">
+
+        <h2>Choose Your Platform</h2>
+
+        <div class="swiper tranding-slider">
+            <div class="swiper-wrapper">
+
+                <div class="swiper-slide app-card" onclick="goTo('/shop/')">
+                    <h3>🛒 Ecommerce</h3>
+                    <p>Shop, cart, orders</p>
+                </div>
+
+                <div class="swiper-slide app-card" onclick="goTo('/learn/')">
+                    <h3>📚 LMS</h3>
+                    <p>Courses, quizzes</p>
+                </div>
+
+                <div class="swiper-slide app-card" onclick="goTo('/world/')">
+                    <h3>🌍 World Monitor</h3>
+                    <p>Real-time insights</p>
+                </div>
+
             </div>
         </div>
 
-        <!-- HERO -->
-        <div class="hero">
-            <h2>Control Everything From One Place</h2>
-            <p>Access all systems with a single dashboard</p>
-        </div>
-
-        <!-- CARDS -->
-        <div class="card-container">
-
-            <a href="/shop/" class="card">
-                <h3>🛒 Ecommerce</h3>
-                <p>Shop, cart, orders</p>
-            </a>
-
-            <a href="/learn/" class="card">
-                <h3>📚 LMS</h3>
-                <p>Courses, quizzes, progress</p>
-            </a>
-
-            <a href="/world/" class="card">
-                <h3>🌍 World Monitor</h3>
-                <p>Real-time global insights</p>
-            </a>
-
-        </div>
-
     </div>
 
-    <!-- TOAST -->
+</div>
 
-    <!-- 🔥 CUSTOM TOAST (YAHI ADD KAR) -->
-    <div id="custom-toast" class="toast">
-        <svg class="bell" viewBox="0 0 448 512">
-            <path
-                d="M224 0c-17.7 0-32 14.3-32 32V49.9C119.5 61.4 64 124.2 64 200v33.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416H424c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4V200c0-75.8-55.5-138.6-128-150.1V32c0-17.7-14.3-32-32-32zm0 96h8c57.4 0 104 46.6 104 104v33.4c0 47.9 13.9 94.6 39.7 134.6H72.3C98.1 328 112 281.3 112 233.4V200c0-57.4 46.6-104 104-104h8zm64 352H224 160c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z">
-            </path>
-        </svg>
-        <span id="toast-text">Login successful</span>
-        <div class="arrow">›</div>
-    </div>
+<!-- SWIPER -->
+<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+<script>
+function goTo(url){
+    window.location.href = url;
+}
 
-            const toast = document.getElementById("custom-toast");
-            const text = document.getElementById("toast-text");
+new Swiper('.tranding-slider', {
+    effect: 'coverflow',
+    grabCursor: true,
+    centeredSlides: true,
+    loop: true,
+    slidesPerView: 'auto',
 
-            const message = "{{ toast|default:''|escapejs }}";
+    coverflowEffect: {
+        rotate: 0,
+        depth: 120,
+        modifier: 2,
+    },
 
-            if (message) {
-                text.innerText = message;
-
-                toast.classList.add("show");
-
-                setTimeout(() => {
-                    toast.classList.remove("show");
-                }, 3000);
-            }
-
-        });
-    </script>
-
-    <!-- 🔥 Toastify JS -->
-    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    spaceBetween: 30,
+});
+</script>
 
 </body>
-
 </html>
