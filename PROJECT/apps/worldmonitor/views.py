@@ -93,6 +93,8 @@ def index(request):
     
 
 
+
+
 def cyberattacks(request):
     attacks = [
         {"country": "USA", "type": "DDoS", "severity": "High"},
@@ -144,6 +146,9 @@ def get_war_countries():
             countries.append("Ukraine")
 
     return list(set(countries))
+        
+        
+        
         
         
 

@@ -1,236 +1,238 @@
 {% extends 'worldmonitor/base.html' %}
 {% load static %}
+
 {% block content %}
 
-<!-- 🎥 VIDEO -->
+<!-- 🎥 BACKGROUND -->
 <video autoplay muted loop id="bg-video">
   <source src="{% static '338803.mp4' %}" type="video/mp4">
 </video>
 
-<!-- 🌑 OVERLAY -->
 <div class="overlay"></div>
+
+<h1 class="title">CYBER THREAT INTELLIGENCE</h1>
+<p class="subtitle">Real-time global cyber monitoring system</p>
+
+<div class="dashboard">
+
+  <!-- LEFT PANEL -->
+  <div class="panel">
+    <h3>⚡ Threat Overview</h3>
+    <div class="item">Total Attacks: <b>12,483</b></div>
+    <div class="item">Active Threats: <b>342</b></div>
+    <div class="item">Top Target: <b>USA</b></div>
+    <div class="item">Threat Level: <span style="color:red;">HIGH</span></div>
+  </div>
+
+  <!-- CENTER PANEL -->
+  <div class="panel center">
+    <h3>📊 Attack Distribution</h3>
+
+    <p>Ransomware ████████ 45%</p>
+    <p>DDoS █████ 25%</p>
+    <p>Phishing ████ 20%</p>
+    <p>Malware ██ 10%</p>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel">
+    <h3>📰 Cyber News</h3>
+    <div id="news"></div>
+  </div>
+
+</div>
+
+<!-- 🔴 POPUP BUTTON -->
+<button onclick="openPopup()" class="attack-btn">
+⚡ Live Attacks
+</button>
+
+<!-- 🔴 POPUP -->
+<div id="popup" class="popup">
+  <div class="popup-box">
+    <h3>⚡ Live Cyber Attacks</h3>
+    <div id="popup-data"></div>
+  </div>
+</div>
 
 <style>
 body {
-  margin: 0;
-  font-family: Arial;
+  margin:0;
+  font-family:'Segoe UI';
+  color:#eee;
 }
 
-/* 🎥 VIDEO */
+/* BG */
 #bg-video {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -2;
+  position:fixed;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:-2;
 }
 
-/* 🌑 OVERLAY */
 .overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(0,0,0,0.9), rgba(0,0,0,0.6));
-  z-index: -1;
-}
-
-/* CONTENT */
-.content {
-  position: relative;
-  z-index: 2;
-  color: #00ffff;
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  z-index:-1;
 }
 
 /* TITLE */
-h2 {
-  text-align: center;
-  text-shadow: 0 0 10px #00ffff, 0 0 25px #00ffff;
-}
+.title { text-align:center; margin-top:20px; }
+.subtitle { text-align:center; color:#888; }
 
 /* GRID */
 .dashboard {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  align-items: center;
-  height: 90vh;
+  display:grid;
+  grid-template-columns:1fr 1.5fr 1fr;
+  gap:20px;
+  padding:30px;
 }
 
 /* PANELS */
 .panel {
-  padding: 20px;
-  border: 1px solid #00ffff;
-  box-shadow: 0 0 20px #00ffff;
-  margin: 20px;
-  backdrop-filter: blur(5px);
+  background:rgba(20,20,20,0.8);
+  padding:20px;
+  border-radius:50px;
+  border:1px solid rgba(255,0,0,0.2);
 }
 
-/* GLOW */
-.panel {
-  animation: glow 2s infinite alternate;
+/* TEXT */
+.item {
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
 }
 
-@keyframes glow {
-  from { box-shadow: 0 0 10px #00ffff; }
-  to { box-shadow: 0 0 30px #00ffff; }
+/* NEWS */
+.item a {
+  color:#fff;
+  text-decoration:none;
 }
 
-/* GLOBE */
-#globe-container {
-  width: 100%;
-  height: 500px;
+/* BUTTON */
+.attack-btn {
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#111;
+  color:#ff4d4d;
+  border:1px solid red;
+  padding:10px 15px;
+  border-radius:8px;
+  cursor:pointer;
 }
 
-/* ATTACK LIST */
-.attack {
-  border-bottom: 1px solid #00ffff;
-  padding: 10px;
+/* POPUP */
+.popup {
+  display:none;
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  background:rgba(0,0,0,0.7);
+}
+
+.popup-box {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:350px;
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  border:1px solid red;
+}
+
+/* DOT */
+.dot {
+  height:8px;
+  width:8px;
+  background:red;
+  border-radius:50%;
+  display:inline-block;
+  margin-right:6px;
 }
 </style>
 
-<div class="content">
-
-<h2>🌍 REALTIME CYBER THREAT MONITOR</h2>
-
-<div class="dashboard">
-
-  <!-- LEFT -->
-  <div class="panel">
-    <h3>⚡ Attack Stats</h3>
-    <p>Total Attacks: 1,234,567</p>
-    <p>Active Nodes: 926,102</p>
-    <p>Threat Level: 🔴 HIGH</p>
-  </div>
-
-  <!-- CENTER -->
-  <div id="globe-container"></div>
-
-  <!-- RIGHT -->
-  <div class="panel">
-    <h3>🌍 Top Targets</h3>
-    <p>USA</p>
-    <p>India</p>
-    <p>Germany</p>
-
-    <h3>🔥 Attack Types</h3>
-    <p>DDoS</p>
-    <p>Phishing</p>
-    <p>Malware</p>
-  </div>
-
-</div>
-
-<!-- ATTACK LIST -->
-<div style="text-align:center;">
-  <h2>⚠ LIVE ATTACKS</h2>
-
-  {% for attack in attacks %}
-    <div class="attack">
-      {{ attack.country }} | {{ attack.type }} | {{ attack.severity }}
-    </div>
-  {% endfor %}
-</div>
-
-</div>
-
-<!-- 🌍 THREE JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
 <script>
-window.onload = function () {
 
-  const container = document.getElementById('globe-container')
+// 📰 NEWS DATA
+let newsData = [
+ {title:"USA: Ransomware attack on hospitals", url:"https://news.google.com"},
+ {title:"India: Banking phishing scam", url:"https://news.google.com"},
+ {title:"Germany: Malware targeting companies", url:"https://news.google.com"},
+ {title:"China: Massive DDoS attack", url:"https://news.google.com"},
+]
 
-  const scene = new THREE.Scene()
+// RENDER NEWS
+function renderNews() {
+  let html=""
+  newsData.forEach(n=>{
+    html+=`
+    <div class="item">
+      🚨 <a href="${n.url}" target="_blank">${n.title}</a>
+    </div>`
+  })
+  document.getElementById("news").innerHTML=html
+}
+renderNews()
 
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    container.clientWidth / container.clientHeight,
-    0.1,
-    1000
-  )
+// 🔴 ATTACK DATA
+let attacks = [
+ {c:"USA",t:"Ransomware",m:"LockBit"},
+ {c:"India",t:"Phishing",m:"Trojan"},
+ {c:"Germany",t:"Malware",m:"SpyAgent"}
+]
 
-  const renderer = new THREE.WebGLRenderer({ alpha: true })
-  renderer.setSize(container.clientWidth, container.clientHeight)
-  container.appendChild(renderer.domElement)
+// POPUP OPEN
+function openPopup() {
+  document.getElementById("popup").style.display="block"
+  renderPopup()
+}
 
-  // 🌍 Globe
-  const geometry = new THREE.SphereGeometry(5, 64, 64)
+// CLOSE
+window.onclick = function(e) {
+  if(e.target.id=="popup"){
+    document.getElementById("popup").style.display="none"
+  }
+}
 
-  const material = new THREE.MeshBasicMaterial({
-    color: 0x00ffff,
-    wireframe: true
+// RENDER POPUP
+function renderPopup(){
+  let html=""
+  attacks.forEach(a=>{
+    html+=`
+    <div class="item">
+      <span class="dot"></span>
+      <b>${a.c}</b><br>
+      ${a.t}<br>
+      <small>${a.m}</small>
+    </div>`
+  })
+  document.getElementById("popup-data").innerHTML=html
+}
+
+// 🔄 LIVE UPDATE
+setInterval(()=>{
+  const countries=["USA","India","China","Russia"]
+  const types=["Ransomware","Phishing","DDoS","Malware"]
+  const malware=["LockBit","Trojan","Botnet","RedLine"]
+
+  attacks.unshift({
+    c:countries[Math.floor(Math.random()*4)],
+    t:types[Math.floor(Math.random()*4)],
+    m:malware[Math.floor(Math.random()*4)]
   })
 
-  const earth = new THREE.Mesh(geometry, material)
-  scene.add(earth)
+  attacks=attacks.slice(0,5)
+  renderPopup()
 
-  camera.position.z = 10
+},2000)
 
-  // 🔥 Attack line + moving dot
-  function createAttackLine(start, end) {
-
-    const material = new THREE.LineBasicMaterial({
-      color: 0xff0000
-    })
-
-    const curve = new THREE.QuadraticBezierCurve3(
-      start,
-      new THREE.Vector3(0, 6, 0),
-      end
-    )
-
-    const points = curve.getPoints(50)
-    const geometry = new THREE.BufferGeometry().setFromPoints(points)
-
-    const line = new THREE.Line(geometry, material)
-    scene.add(line)
-
-    // moving dot
-    const dot = new THREE.Mesh(
-      new THREE.SphereGeometry(0.1, 8, 8),
-      new THREE.MeshBasicMaterial({ color: 0xffff00 })
-    )
-
-    scene.add(dot)
-
-    let progress = 0
-
-    function animateDot() {
-      progress += 0.01
-      if (progress > 1) progress = 0
-
-      const point = curve.getPoint(progress)
-      dot.position.set(point.x, point.y, point.z)
-
-      requestAnimationFrame(animateDot)
-    }
-
-    animateDot()
-  }
-
-  createAttackLine(
-    new THREE.Vector3(-3, 1, 4),
-    new THREE.Vector3(3, 2, -4)
-  )
-
-  createAttackLine(
-    new THREE.Vector3(2, -1, 4),
-    new THREE.Vector3(-2, 3, -4)
-  )
-
-  // 🔄 Animation
-  function animate() {
-    requestAnimationFrame(animate)
-    earth.rotation.y += 0.01
-    renderer.render(scene, camera)
-  }
-
-  animate()
-}
 </script>
 
 {% endblock %}
