@@ -14,12 +14,9 @@ def course_list(request):
 
 def course_detail(request, slug):
     course = get_object_or_404(Course, slug=slug)
-
-    lessons = course.lessons.all()
-    quizzes = course.quizzes.all()
+    videos = course.videos.all()
 
     return render(request, 'lms/course_detail.html', {
         'course': course,
-        'lessons': lessons,
-        'quizzes': quizzes
+        'videos': videos
     })

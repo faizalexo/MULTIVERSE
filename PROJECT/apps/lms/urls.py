@@ -11,7 +11,7 @@ urlpatterns = [
     path('', home, name='home'),
 
     path('courses/', course_list, name='course_list'),
-    path('courses/<int:id>/', course_detail, name='course_detail'),
+    path('courses/<slug:slug>/', course_detail, name='course_detail'),
 
     path('lessons/', lesson_list, name='lesson_list'),
     path('lesson/<int:lesson_id>/', lesson_detail, name='lesson_detail'),
@@ -20,4 +20,7 @@ urlpatterns = [
     path('quiz/<int:quiz_id>/', quiz_detail, name='quiz_detail'),
 
     path('submit-answer/', submit_answer, name='submit_answer'),
+  
+
+
 ]

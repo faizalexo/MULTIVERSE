@@ -3,7 +3,7 @@
 {% block content %}
 
 <style>
-/* 🌌 Glass + smooth UI */
+
 .glass {
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(12px);
@@ -11,95 +11,106 @@
     transition: 0.3s;
 }
 
+
 .glass:hover {
     transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
 }
 
-/* 🎯 Selected option */
-.option.selected {
-    border: 2px solid #6366f1;
-    background: #eef2ff;
+.option {
+    transition: 0.2s;
+}
+.option:hover {
+    background: #f1f5f9;
 }
 
-/* 🚀 Button hover */
-.btn-hover:hover {
-    transform: scale(1.05);
+.option.correct {
+    background: #22c55e !important;
+    color: white;
+}
+.option.wrong {
+    background: #ef4444 !important;
+    color: white;
 }
 </style>
 
-<div class="max-w-4xl mx-auto">
+<div class="max-w-3xl mx-auto">
 
     <!-- HEADER -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold">🧪 Course Quiz</h1>
-        <p class="text-gray-500">Test your knowledge</p>
+    <div class="mb-8 text-center">
+        <h1 class="text-3xl font-bold">🧪 Quiz</h1>
+        <p class="text-gray-500">Answer and move to next</p>
     </div>
 
-    <!-- PROGRESS BAR -->
-    <div class="w-full bg-gray-200 rounded-full h-2 mb-8">
-        <div id="progressBar" class="bg-indigo-600 h-2 rounded-full" style="width: 0%"></div>
+    <!-- PROGRESS -->
+    <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+        <div id="progressBar" class="bg-indigo-600 h-2 rounded-full" style="width:0%"></div>
     </div>
 
-    <form method="POST" id="quizForm" class="space-y-8">
-        {% csrf_token %}
+    <!-- QUESTION CARD -->
+    <div class="glass p-6 shadow">
 
-        {% for q in quizzes %}
-        <div class="glass p-6 shadow">
+        <h2 class="text-lg font-semibold mb-5">
+            {{ question.text }}
+        </h2>
 
-            <h2 class="text-lg font-semibold mb-5">
-                {{ forloop.counter }}. {{ q.question }}
-            </h2>
+        <div class="space-y-3">
 
-            <div class="space-y-3">
+            {% for choice in question.choices.all %}
+            <div class="option p-3 border rounded-xl cursor-pointer"
+                 onclick="checkAnswer(this, '{{ choice.id }}', '{{ question.id }}')"
 
-                {% for option, value in [('A', q.option_a), ('B', q.option_b), ('C', q.option_c), ('D', q.option_d)] %}
-                <div class="option p-3 border rounded-xl cursor-pointer"
-                     onclick="selectOption(this, 'q{{ q.id }}', '{{ option }}')">
-
-                    <input type="radio" name="q{{ q.id }}" value="{{ option }}" hidden>
-
-                    <span>{{ value }}</span>
-                </div>
-                {% endfor %}
+                {{ choice.text }}
 
             </div>
+            {% endfor %}
 
         </div>
-        {% endfor %}
 
-        <button class="btn-hover w-full bg-gradient-to-r from-indigo-600 to-purple-600 
-                       text-white py-3 rounded-xl text-lg font-semibold shadow-lg">
-            Submit Quiz 🚀
-        </button>
-
-    </form>
+    </div>
 
 </div>
 
 <script>
-// 🎯 Select option + highlight
-function selectOption(element, name, value) {
-    let parent = element.parentElement;
-    let options = parent.querySelectorAll('.option');
+let answered = false;
 
-    options.forEach(opt => opt.classList.remove('selected'));
+function checkAnswer(element, choiceId, questionId) {
 
-    element.classList.add('selected');
+    if (answered) return;
+    answered = true;
 
-    element.querySelector('input').checked = true;
+    fetch("{% url 'lms:submit_answer' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({
+            choice_id: choiceId,
+            question_id: questionId
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
 
-    updateProgress();
-}
+        if (data.correct) {
+            element.classList.add("correct");
+        } else {
+            element.classList.add("wrong");
+        }
 
-// 📊 Progress bar logic
-function updateProgress() {
-    let total = document.querySelectorAll('.glass').length;
-    let answered = document.querySelectorAll('input[type="radio"]:checked').length;
+        // progress bar
+        document.getElementById('progressBar').style.width = "100%";
 
-    let percent = (answered / total) * 100;
+        // next question
+        setTimeout(() => {
+            if (data.next_question_id) {
+                window.location.href = `/lms/quiz/${data.next_question_id}/`;
+            } else {
+                alert("🎉 Quiz Completed!");
+            }
+        }, 800);
 
-    document.getElementById('progressBar').style.width = percent + "%";
+    });
 }
 </script>
 
