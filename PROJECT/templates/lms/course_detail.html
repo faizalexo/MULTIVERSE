@@ -3,115 +3,177 @@
 {% block content %}
 
 <style>
+body {
+    background: linear-gradient(135deg, #0f172a, #020617);
+    color: white;
+}
 
-.glass {
-    background: rgba(255, 255, 255, 0.6);
+/* 🔲 GRID */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+/* 🧊 CARD */
+.card {
+    background: rgba(255,255,255,0.05);
     backdrop-filter: blur(12px);
     border-radius: 16px;
+    overflow: hidden;
+    transition: 0.3s;
+    position: relative;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+/* 🖼 IMAGE */
+.card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+/* 🏷 CATEGORY BADGE */
+.badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #6366f1;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* 📝 BODY */
+.card-body {
+    padding: 15px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.desc {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 5px;
+}
+
+/* 📊 FOOTER */
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #cbd5f5;
+}
+
+/* 🔍 SEARCH */
+.search-box {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    margin-bottom: 20px;
+}
+
+/* ✨ CTA BUTTON */
+.start-btn {
+    margin-top: 10px;
+    background: linear-gradient(45deg, #6366f1, #8b5cf6);
+    padding: 8px;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 14px;
     transition: 0.3s;
 }
 
-
-.glass:hover {
-    transform: translateY(-3px);
-}
-
-.option {
-    transition: 0.2s;
-}
-.option:hover {
-    background: #f1f5f9;
-}
-
-.option.correct {
-    background: #22c55e !important;
-    color: white;
-}
-.option.wrong {
-    background: #ef4444 !important;
-    color: white;
+.start-btn:hover {
+    transform: scale(1.05);
 }
 </style>
 
-<div class="max-w-3xl mx-auto">
+<div class="max-w-7xl mx-auto px-4">
 
     <!-- HEADER -->
-    <div class="mb-8 text-center">
-        <h1 class="text-3xl font-bold">🧪 Quiz</h1>
-        <p class="text-gray-500">Answer and move to next</p>
+    <div class="mb-10 text-center">
+        <h1 class="text-4xl font-bold">🚀 Explore Courses</h1>
+        <p class="text-gray-400 mt-2">Pick a skill and start your journey</p>
     </div>
 
-    <!-- PROGRESS -->
-    <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
-        <div id="progressBar" class="bg-indigo-600 h-2 rounded-full" style="width:0%"></div>
-    </div>
+    <!-- SEARCH -->
+    <input type="text" id="searchInput" class="search-box"
+           placeholder="🔍 Search courses...">
 
-    <!-- QUESTION CARD -->
-    <div class="glass p-6 shadow">
+    <!-- GRID -->
+    <div class="course-grid" id="courseGrid">
 
-        <h2 class="text-lg font-semibold mb-5">
-            {{ question.text }}
-        </h2>
+        {% for course in courses %}
+        <a href="{% url 'lms:course_detail' course.slug %}" class="course-card">
 
-        <div class="space-y-3">
+            <div class="card">
 
-            {% for choice in question.choices.all %}
-            <div class="option p-3 border rounded-xl cursor-pointer"
-                 onclick="checkAnswer(this, '{{ choice.id }}', '{{ question.id }}')"
+                <!-- CATEGORY -->
+                <div class="badge">
+                    {{ course.category|default:"Skill" }}
+                </div>
 
-                {{ choice.text }}
+                <!-- IMAGE -->
+                {% if course.image %}
+                    <img src="{{ course.image.url }}">
+                {% else %}
+                    <img src="https://picsum.photos/300/200">
+                {% endif %}
+
+                <!-- BODY -->
+                <div class="card-body">
+                    <div class="title">{{ course.title }}</div>
+                    <div class="desc">
+                        {{ course.description|truncatewords:12 }}
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="card-footer">
+                        <span>📚 {{ course.total_lessons }}</span>
+                        <span>🧠 {{ course.total_quizzes }}</span>
+                    </div>
+
+                    <!-- CTA -->
+                    <div class="start-btn">
+                        Start Learning →
+                    </div>
+
+                </div>
 
             </div>
-            {% endfor %}
 
-        </div>
+        </a>
+        {% endfor %}
 
     </div>
 
 </div>
 
 <script>
-let answered = false;
+// 🔍 SEARCH FILTER
+const searchInput = document.getElementById("searchInput");
+const cards = document.querySelectorAll(".course-card");
 
-function checkAnswer(element, choiceId, questionId) {
+searchInput.addEventListener("keyup", function () {
+    let value = this.value.toLowerCase();
 
-    if (answered) return;
-    answered = true;
+    cards.forEach(card => {
+        let text = card.innerText.toLowerCase();
 
-    fetch("{% url 'lms:submit_answer' %}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": "{{ csrf_token }}"
-        },
-        body: JSON.stringify({
-            choice_id: choiceId,
-            question_id: questionId
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-
-        if (data.correct) {
-            element.classList.add("correct");
-        } else {
-            element.classList.add("wrong");
-        }
-
-        // progress bar
-        document.getElementById('progressBar').style.width = "100%";
-
-        // next question
-        setTimeout(() => {
-            if (data.next_question_id) {
-                window.location.href = `/lms/quiz/${data.next_question_id}/`;
-            } else {
-                alert("🎉 Quiz Completed!");
-            }
-        }, 800);
-
+        card.style.display = text.includes(value) ? "block" : "none";
     });
-}
+});
 </script>
 
 {% endblock %}

@@ -2,23 +2,120 @@
 
 {% block content %}
 
-<h1>All Courses</h1>
+<style>
+/* 🌌 Background handled by base */
 
-<div class="course-grid">
-    {% for course in courses %}
-    <a href="{% url 'lms:course_detail' course.slug %}">
-        <div class="card">
+/* 📦 Grid */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
 
-            {% if course.image %}
-            <img src="{{ course.image.url }}">
-            {% endif %}
+/* 🧊 Card */
+.card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: 0.3s;
+    cursor: pointer;
+}
 
-            <h3>{{ course.title }}</h3>
-            <p>{{ course.description|truncatewords:15 }}</p>
+.card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 0 20px #6366f1;
+}
 
-        </div>
-    </a>
-    {% endfor %}
+/* 🖼 Image */
+.card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+/* 📝 Content */
+.card-body {
+    padding: 15px;
+}
+
+.card h3 {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+/* 🔍 Search */
+.search-box {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    margin-top: 20px;
+}
+</style>
+
+<div class="max-w-6xl mx-auto px-4">
+
+    <!-- HEADER -->
+    <h1 class="text-3xl font-bold mb-4">📚 All Courses</h1>
+
+    <!-- SEARCH -->
+    <input type="text" id="searchInput" class="search-box"
+           placeholder="🔍 Search courses...">
+
+    <!-- GRID -->
+    <div class="course-grid" id="courseGrid">
+
+        {% for course in courses %}
+        <a href="{% url 'lms:course_detail' course.slug %}" class="course-card">
+
+            <div class="card">
+
+                {% if course.image %}
+                    <img src="{{ course.image.url }}">
+                {% else %}
+                    <img src="https://picsum.photos/300/200">
+                {% endif %}
+
+                <div class="card-body">
+                    <h3>{{ course.title }}</h3>
+                    <p>{{ course.description|truncatewords:12 }}</p>
+                </div>
+
+            </div>
+
+        </a>
+        {% endfor %}
+
+    </div>
+
 </div>
+
+<script>
+// 🔍 SEARCH FILTER
+const searchInput = document.getElementById("searchInput");
+const cards = document.querySelectorAll(".course-card");
+
+searchInput.addEventListener("keyup", function () {
+    let value = this.value.toLowerCase();
+
+    cards.forEach(card => {
+        let text = card.innerText.toLowerCase();
+
+        if (text.includes(value)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+    });
+});
+</script>
 
 {% endblock %}
