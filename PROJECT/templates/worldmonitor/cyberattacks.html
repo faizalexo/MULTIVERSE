@@ -1,213 +1,238 @@
 {% extends 'worldmonitor/base.html' %}
+{% load static %}
 
 {% block content %}
 
-<h2 style="text-align:center; color:#00ffff;">
-  Realtime Threat Monitor
-</h2>
+<!-- 🎥 BACKGROUND -->
+<video autoplay muted loop id="bg-video">
+  <source src="{% static '338803.mp4' %}" type="video/mp4">
+</video>
 
-<div id="globe-container"></div>
+<div class="overlay"></div>
 
-<style>
-body {
-  background: radial-gradient(circle, #02121c, #000);
-  color: #00ffff;
-  font-family: Arial;
-}
-
-/* MAIN GRID (IMPORTANT 🔥) */
-.dashboard {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
-  align-items: center;
-  height: 100vh;
-}
-
-/* CENTER GLOBE */
-#globe-container {
-  width: 100%;
-  height: 600px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* PANELS */
-.panel {
-  padding: 20px;
-  border: 1px solid #00ffff;
-  box-shadow: 0 0 20px #00ffff;
-  margin: 20px;
-}
-
-/* LEFT */
-.left {
-  justify-self: start;
-}
-
-/* RIGHT */
-.right {
-  justify-self: end;
-  text-align: right;
-}
-
-/* TITLE */
-h2 {
-  text-align: center;
-  color: #00ffff;
-  text-shadow: 0 0 15px #00ffff;
-}
-
-.panel {
-  animation: glow 2s infinite alternate;
-}
-
-@keyframes glow {
-  from { box-shadow: 0 0 10px #00ffff; }
-  to { box-shadow: 0 0 25px #00ffff; }
-}
-
-</style>
-
-
-
+<h1 class="title">CYBER THREAT INTELLIGENCE</h1>
+<p class="subtitle">Real-time global cyber monitoring system</p>
 
 <div class="dashboard">
 
   <!-- LEFT PANEL -->
-  <div class="panel left">
-    <h3>⚡ Attack Stats</h3>
-    <p>Total Attacks: 1,234,567</p>
-    <p>Active Nodes: 926,102</p>
-    <p>Threat Level: 🔴 HIGH</p>
+  <div class="panel">
+    <h3>⚡ Threat Overview</h3>
+    <div class="item">Total Attacks: <b>12,483</b></div>
+    <div class="item">Active Threats: <b>342</b></div>
+    <div class="item">Top Target: <b>USA</b></div>
+    <div class="item">Threat Level: <span style="color:red;">HIGH</span></div>
   </div>
 
-  <!-- CENTER GLOBE -->
-  <div id="globe-container"></div>
+  <!-- CENTER PANEL -->
+  <div class="panel center">
+    <h3>📊 Attack Distribution</h3>
+
+    <p>Ransomware ████████ 45%</p>
+    <p>DDoS █████ 25%</p>
+    <p>Phishing ████ 20%</p>
+    <p>Malware ██ 10%</p>
+  </div>
 
   <!-- RIGHT PANEL -->
-  <div class="panel right">
-    <h3>🌍 Top Targets</h3>
-    <p>USA</p>
-    <p>India</p>
-    <p>Germany</p>
-
-    <h3>🔥 Attack Types</h3>
-    <p>DDoS</p>
-    <p>Phishing</p>
-    <p>Malware</p>
+  <div class="panel">
+    <h3>📰 Cyber News</h3>
+    <div id="news"></div>
   </div>
 
 </div>
 
+<!-- 🔴 POPUP BUTTON -->
+<button onclick="openPopup()" class="attack-btn">
+⚡ Live Attacks
+</button>
 
+<!-- 🔴 POPUP -->
+<div id="popup" class="popup">
+  <div class="popup-box">
+    <h3>⚡ Live Cyber Attacks</h3>
+    <div id="popup-data"></div>
+  </div>
+</div>
 
+<style>
+body {
+  margin:0;
+  font-family:'Segoe UI';
+  color:#eee;
+}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+/* BG */
+#bg-video {
+  position:fixed;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  z-index:-2;
+}
+
+.overlay {
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  z-index:-1;
+}
+
+/* TITLE */
+.title { text-align:center; margin-top:20px; }
+.subtitle { text-align:center; color:#888; }
+
+/* GRID */
+.dashboard {
+  display:grid;
+  grid-template-columns:1fr 1.5fr 1fr;
+  gap:20px;
+  padding:30px;
+}
+
+/* PANELS */
+.panel {
+  background:rgba(20,20,20,0.8);
+  padding:20px;
+  border-radius:50px;
+  border:1px solid rgba(255,0,0,0.2);
+}
+
+/* TEXT */
+.item {
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+
+/* NEWS */
+.item a {
+  color:#fff;
+  text-decoration:none;
+}
+
+/* BUTTON */
+.attack-btn {
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#111;
+  color:#ff4d4d;
+  border:1px solid red;
+  padding:10px 15px;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* POPUP */
+.popup {
+  display:none;
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  background:rgba(0,0,0,0.7);
+}
+
+.popup-box {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:350px;
+  background:#111;
+  padding:20px;
+  border-radius:10px;
+  border:1px solid red;
+}
+
+/* DOT */
+.dot {
+  height:8px;
+  width:8px;
+  background:red;
+  border-radius:50%;
+  display:inline-block;
+  margin-right:6px;
+}
+</style>
 
 <script>
-window.onload = function () {
 
-  const container = document.getElementById("globe-container");
+// 📰 NEWS DATA
+let newsData = [
+ {title:"USA: Ransomware attack on hospitals", url:"https://news.google.com"},
+ {title:"India: Banking phishing scam", url:"https://news.google.com"},
+ {title:"Germany: Malware targeting companies", url:"https://news.google.com"},
+ {title:"China: Massive DDoS attack", url:"https://news.google.com"},
+]
 
-  const scene = new THREE.Scene();
+// RENDER NEWS
+function renderNews() {
+  let html=""
+  newsData.forEach(n=>{
+    html+=`
+    <div class="item">
+      🚨 <a href="${n.url}" target="_blank">${n.title}</a>
+    </div>`
+  })
+  document.getElementById("news").innerHTML=html
+}
+renderNews()
 
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    container.clientWidth / container.clientHeight,
-    0.1,
-    1000
-  );
+// 🔴 ATTACK DATA
+let attacks = [
+ {c:"USA",t:"Ransomware",m:"LockBit"},
+ {c:"India",t:"Phishing",m:"Trojan"},
+ {c:"Germany",t:"Malware",m:"SpyAgent"}
+]
 
-  const renderer = new THREE.WebGLRenderer();
-  renderer.setSize(container.clientWidth, container.clientHeight);
-  container.appendChild(renderer.domElement);
+// POPUP OPEN
+function openPopup() {
+  document.getElementById("popup").style.display="block"
+  renderPopup()
+}
 
-  // 🌍 Globe
-  const geometry = new THREE.SphereGeometry(5, 64, 64);
-
-  const material = new THREE.MeshBasicMaterial({
-    color: 0x00ffff,
-    wireframe: false
-  });
-
-  const earth = new THREE.Mesh(geometry, material);
-  scene.add(earth);
-
-  camera.position.z = 10;
-
-  // 💡 Light
-  const light = new THREE.PointLight(0x00ffff, 1.5);
-  light.position.set(10, 10, 10);
-  scene.add(light);
-
-  // 🔥 Attack line function
-  function createAttackLine(start, end) {
-
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0xff3333,
-      transparent: true,
-      opacity: 0.9
-    });
-
-    const curve = new THREE.QuadraticBezierCurve3(
-      start,
-      new THREE.Vector3(0, 6, 0),
-      end
-    );
-
-    const points = curve.getPoints(50);
-    const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-    const line = new THREE.Line(geometry, lineMaterial);
-    scene.add(line);
-
-    // ⚡ Moving dot
-    const dotGeometry = new THREE.SphereGeometry(0.1, 8, 8);
-    const dotMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-
-    const dot = new THREE.Mesh(dotGeometry, dotMaterial);
-    scene.add(dot);
-
-    let progress = 0;
-
-    function animateDot() {
-      progress += 0.01;
-      if (progress > 1) progress = 0;
-
-      const point = curve.getPoint(progress);
-      dot.position.set(point.x, point.y, point.z);
-
-      requestAnimationFrame(animateDot);
-    }
-
-    animateDot();
+// CLOSE
+window.onclick = function(e) {
+  if(e.target.id=="popup"){
+    document.getElementById("popup").style.display="none"
   }
+}
 
-  // 🔥 Add lines
-  createAttackLine(
-    new THREE.Vector3(-3, 1, 4),
-    new THREE.Vector3(3, 2, -4)
-  );
+// RENDER POPUP
+function renderPopup(){
+  let html=""
+  attacks.forEach(a=>{
+    html+=`
+    <div class="item">
+      <span class="dot"></span>
+      <b>${a.c}</b><br>
+      ${a.t}<br>
+      <small>${a.m}</small>
+    </div>`
+  })
+  document.getElementById("popup-data").innerHTML=html
+}
 
-  createAttackLine(
-    new THREE.Vector3(2, -1, 4),
-    new THREE.Vector3(-2, 3, -4)
-  );
+// 🔄 LIVE UPDATE
+setInterval(()=>{
+  const countries=["USA","India","China","Russia"]
+  const types=["Ransomware","Phishing","DDoS","Malware"]
+  const malware=["LockBit","Trojan","Botnet","RedLine"]
 
-  // 🔄 Animation
-  function animate() {
-    requestAnimationFrame(animate);
-    earth.rotation.y += 0.01;
-    renderer.render(scene, camera);
-  }
+  attacks.unshift({
+    c:countries[Math.floor(Math.random()*4)],
+    t:types[Math.floor(Math.random()*4)],
+    m:malware[Math.floor(Math.random()*4)]
+  })
 
-  animate();
-};
+  attacks=attacks.slice(0,5)
+  renderPopup()
 
+},2000)
 
-const material = new THREE.MeshStandardMaterial({
-  color: 0x00ffff,
-});
 </script>
+
 {% endblock %}
