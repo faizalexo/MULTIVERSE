@@ -1,0 +1,64 @@
+{% extends 'lms/base.html' %}
+{% load static %}
+
+{% block title %}Dashboard | LMS{% endblock %}
+
+{% block content %}
+
+<section class="hero" style="padding: 120px 5% 60px;">
+    <h1 style="font-size: 3rem; font-weight: 900;">Welcome Back 👋</h1>
+    <p style="color: #94A3B8; margin-top: 10px;">
+        Continue your learning journey and master new skills.
+    </p>
+</section>
+
+<!-- 🔥 COURSES SECTION -->
+<section style="padding: 40px 5%;">
+    <h2 style="font-size: 2rem; margin-bottom: 30px;">Your Courses</h2>
+
+    <div class="card-grid">
+        
+       
+            <div class="course-card">
+
+                {% if course.image %}
+                <img src="{{ course.image.url }}" alt="{{ course.title }}">
+                {% else %}
+                <img src="{% static 'lms/images/placeholder.png' %}" alt="default">
+                {% endif %}
+
+                <div class="card-body">
+                    <h3>{{ course.title }}</h3>
+                    <p style="color:#94A3B8;">
+                        {{ course.description|truncatewords:12 }}
+                    </p>
+
+                    <!-- 🔥 fake progress (upgrade later) -->
+                    <div style="margin-top: 15px;">
+                        <div style="height:6px; background:#1e293b; border-radius:10px;">
+                            <div style="width:40%; height:100%; background:#6366F1; border-radius:10px;"></div>
+                        </div>
+                        <span style="font-size:0.8rem; color:#94A3B8;">40% Complete</span>
+                    </div>
+                </div>
+
+            </div>
+        
+        
+        <p>No courses available</p>
+        
+    </div>
+</section>
+
+<!-- 🔥 QUICK ACTIONS -->
+<section style="padding: 40px 5%;">
+    <h2 style="font-size: 2rem; margin-bottom: 20px;">Quick Actions</h2>
+
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+        <a href="{% url 'lms:course_list' %}" class="enroll-btn">Browse Courses</a>
+        <a href="{% url 'lms:quiz_home' %}" class="enroll-btn">Take Quiz</a>
+        <a href="{% url 'lms:lesson_list' %}" class="enroll-btn">Continue Learning</a>
+    </div>
+</section>
+
+{% endblock %}

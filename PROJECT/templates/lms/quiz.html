@@ -1,48 +1,39 @@
-{% extends "base.html" %}
+<h2>{{ question.text }}</h2>
 
-{% block content %}
+{% for choice in question.choices.all %}
+<button onclick="checkAnswer(this, {{ choice.id }}, {{ question.id }})">
+    {{ choice.text }}
+</button>
+{% endfor %}
 
-<div class="max-w-3xl mx-auto">
+<button id="next-btn" style="display:none;">Next</button>
 
-    <h1 class="text-3xl font-bold mb-8">Course Quiz</h1>
+<script>
+async function checkAnswer(btn, choiceId, questionId) {
+    const res = await fetch("{% url 'lms:submit_answer' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({
+            choice_id: choiceId,
+            question_id: questionId
+        })
+    });
 
-    <form method="POST" class="space-y-6">
-        {% csrf_token %}
+    const data = await res.json();
 
-        {% for q in quizzes %}
-        <div class="bg-white p-6 rounded-2xl shadow-lg">
+    if (data.correct) btn.style.background = "green";
+    else btn.style.background = "red";
 
-            <h2 class="font-semibold mb-4">
-                {{ forloop.counter }}. {{ q.question }}
-            </h2>
+    const nextBtn = document.getElementById('next-btn');
+    nextBtn.style.display = "block";
 
-            <div class="space-y-2">
-                <label class="block">
-                    <input type="radio" name="q{{ q.id }}" value="A"> {{ q.option_a }}
-                </label>
-
-                <label class="block">
-                    <input type="radio" name="q{{ q.id }}" value="B"> {{ q.option_b }}
-                </label>
-
-                <label class="block">
-                    <input type="radio" name="q{{ q.id }}" value="C"> {{ q.option_c }}
-                </label>
-
-                <label class="block">
-                    <input type="radio" name="q{{ q.id }}" value="D"> {{ q.option_d }}
-                </label>
-            </div>
-
-        </div>
-        {% endfor %}
-
-        <button class="bg-indigo-600 text-white px-6 py-3 rounded-xl w-full">
-            Submit Quiz
-        </button>
-
-    </form>
-
-</div>
-
-{% endblock %}
+    if (data.next_question_id) {
+        nextBtn.onclick = () => {
+            window.location.href = `/quiz/${data.next_question_id}/`;
+        };
+    }
+}
+</script>
