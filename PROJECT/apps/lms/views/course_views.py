@@ -14,4 +14,10 @@ def course_list(request):
 
 def course_detail(request, slug):
     course = Course.objects.get(slug=slug)
-    return render(request, 'lms/course_detail.html', {'course': course})
+    lessons = course.lessons.all()
+
+    return render(request, 'lms/course_detail.html', {
+        'course': course,
+        'lessons': lessons,
+        'first_video': lessons.first()
+    })
