@@ -2,5 +2,84 @@
 {% block title %}Geopolitics{% endblock %}
 
 {% block content %}
-<h1>hello world</h1>
+<h1></h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Background</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Video Styling */
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* full cover */
+            z-index: -1;
+        }
+
+        /* Content on top */
+        .content {
+            position: relative;
+            z-index: 1;
+            color: white;
+            text-align: center;
+            top: 40%;
+        }
+
+        h1 {
+            font-size: 50px;
+        }
+
+        p {
+            font-size: 20px;
+        }
+
+        /* Optional overlay (dark layer for readability) */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(55, 6, 6, 0.4);
+            z-index: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Video -->
+    <video autoplay muted loop class="bg-video">
+        <source src="your-video.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+
+    <!-- Overlay (optional) -->
+    <div class="overlay"></div>
+
+    <!-- Page Content -->
+    <div class="content">
+        <h1>Welcome</h1>
+        <p>to the geopolitics 🔥</p>
+    </div>
+
+</body>
+</html>
+
 {% endblock content %}

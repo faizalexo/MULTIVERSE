@@ -38,7 +38,7 @@ def index(request):
             print("API RESPONSE:", data)
 
             if data.get("status") == "ok":
-                articles = data.get("articles", [])[:6]
+                articles = data.get("articles", [])[:60]
                 cache.set('news_cache', articles, 600)
 
             else:
