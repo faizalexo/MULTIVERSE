@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'apps.lms',
     'apps.accounts',
     'apps.worldmonitor',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

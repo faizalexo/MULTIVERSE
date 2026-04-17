@@ -1,18 +1,10 @@
 from django.shortcuts import render, get_object_or_404
-from ..models.course import Course
+from ..models import Course
 
 
 def home(request):
-    query = request.GET.get('q')
     courses = Course.objects.all()
-
-    if query:
-        courses = courses.filter(title__icontains=query)
-
-    return render(request, 'lms/dashboard.html', {
-        'courses': courses,
-        'query': query
-    })
+    return render(request, 'lms/dashboard.html', {'courses': courses})
 
 
 def course_list(request):
@@ -20,6 +12,14 @@ def course_list(request):
     return render(request, 'lms/course_list.html', {'courses': courses})
 
 
-def course_detail(request, id):
-    course = get_object_or_404(Course, id=id)
-    return render(request, 'lms/pages/course_detail.html', {'course': course})
+def course_detail(request, slug):
+    course = get_object_or_404(Course, slug=slug)
+
+    lessons = course.lessons.all()
+    quizzes = course.quizzes.all()
+
+    return render(request, 'lms/course_detail.html', {
+        'course': course,
+        'lessons': lessons,
+        'quizzes': quizzes
+    })
